@@ -5,35 +5,29 @@
 <head>
 <meta charset="UTF-8">
 <title>상품수정폼</title>
-<link href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,600,700" rel="stylesheet" />
-<!-- Nucleo Icons -->
-<link href="../assets/css/nucleo-icons.css" rel="stylesheet" />
-<link href="../assets/css/nucleo-svg.css" rel="stylesheet" />
-<!-- Font Awesome Icons -->
-<script src="https://kit.fontawesome.com/42d5adcbca.js" crossorigin="anonymous"></script>
-<link href="../assets/css/nucleo-svg.css" rel="stylesheet" />
-<!-- CSS Files -->
-<link id="pagestyle" href="../assets/css/argon-dashboard.css?v=2.0.4" rel="stylesheet" />
 <script src="/webjars/jquery/3.6.1/jquery.min.js"></script>
 </head>
 <body>
 	<button type="button" onclick="addUrl()">url박스추가</button>
-	<form id="urlForm">
+	<div id="urlForm">
 		<input type="text" name="url">
-	</form>
+	</div>
 	<button type="button" onclick="getProductInfo()">상품정보 가져오기</button>
 	<hr>
 	<div id="productInfo">
 		<h4>상품정보</h4>
-		<div id="productInfoDetail">
-			
-		</div>
+		
+		<form id="submitForm">
+			<div id="productInfoDetail">
+				
+			</div>
+		</form>
 		
 	</div>
 </body>
 
 <script type="text/javascript">
-// $('#productInfo').hide();
+$('#productInfo').hide();
 
 //url추가
 var addUrl = function(){
@@ -63,18 +57,23 @@ var getProductInfo = function(){
 					html += '<div>';
 					html += '	<label for="productTitle">상품명</label>';
 					html += '	<input type="text" class="productTitle" value="' + dataItem.title + '">';
+					html += '	<button type="button" onclick="addProduct()">해당상품 업로드</button>';
 					html += '</div>';
 					
 					//옵션
 					if(dataItem.optionKey != null && dataItem.optionKey != '' && dataItem.optionKey != undefined){
+						//옵션명
 						html += '<div>';
-						html += '	<label for="productOptionKey" class="productOptionKey">' + dataItem.optionKey + '</label>';
-						html += '	<select class="productOptionValue">';
+						html += '	<label for="productOptionKey" class="productOptionKey">옵션그룹</label>';
+						html += '	<input type="text" name="optionKey" value="' + dataItem.optionKey + '"/>';
+						html += '</div>';
+						
 						//옵션값
+						html += '<div>';
 						for(var item of dataItem.optionValues){						
-							html += '		<option value="' + item + '">' + item + '</option>';
+							html += '		<input type="checkbox" name="optionValueCheck" value="' + item + '_ck">';
+							html += '		<input type="text" name="optionValue" value="' + item + '"><br>';
 						}
-						html += '	</select>';
 						html += '</div>';
 					}
 					
@@ -89,7 +88,8 @@ var getProductInfo = function(){
 					html += '	<label for="productPhotos">사진</label>';
 					html += '	<div>';					
 					for(var item of dataItem.photos){						
-						html += '	<img alt="photo" src="' + item + '">';
+						html += '	<img alt="photo" src="' + item + '" style="width:250px;">';
+						html += '	<input type="hidden" name="productPhoto" value="' + item + '">';
 					}
 					html += '	</div>';
 					html += '</div>';
@@ -98,6 +98,7 @@ var getProductInfo = function(){
 			}
 			
 			$('#productInfoDetail').html(html);
+			$('#productInfo').show();
 		},
 		error : function(fail){
 		}
