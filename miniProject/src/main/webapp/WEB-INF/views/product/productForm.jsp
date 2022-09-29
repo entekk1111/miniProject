@@ -6,6 +6,8 @@
 <meta charset="UTF-8">
 <title>상품수정폼</title>
 <script src="/webjars/jquery/3.6.1/jquery.min.js"></script>
+<meta name="_csrf" content="${_csrf.token}">
+<meta name="_csrf_header" content="${_csrf.headerName}">
 </head>
 <body>
 	<button type="button" onclick="addUrl()">url박스추가</button>
@@ -27,8 +29,14 @@
 </body>
 
 <script type="text/javascript">
+var token = $("meta[name='_csrf']").attr("content");
+var header = $("meta[name='_csrf_header']").attr("content");
+
 $('#productInfo').hide();
-//test
+
+$(document).ajaxSend(function(e, xhr, options) {
+    xhr.setRequestHeader(header, token);
+});
 
 //url추가
 var addUrl = function(){
