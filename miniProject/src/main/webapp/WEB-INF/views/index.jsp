@@ -8,5 +8,6 @@
 </head>
 <body>
 메인화면
+<a href="../item">아이템</a>
 </body>
 </html>

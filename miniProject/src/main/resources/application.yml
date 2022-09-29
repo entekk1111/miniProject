@@ -1,0 +1,29 @@
+spring:
+  
+  mvc:
+    view:
+      prefix: /WEB-INF/views/
+      suffix: .jsp
+  
+  datasource:
+    url: jdbc:mysql://192.168.0.83:3306/oliver?autoReconnect=true&useUnicode=true&characterEncoding=UTF8
+    username: root
+    password: pmgk1234
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    
+  security:
+    user:
+      name: admin
+      password: admin1
+    
+server:
+  port: 8082
+  
+mybatis:
+  mapper-locations: mapper/*.xml
+  type-aliases-package: com.miniProject.mapper
+  configuration:
+    map-underscore-to-camel-case: true
+
+
+  
