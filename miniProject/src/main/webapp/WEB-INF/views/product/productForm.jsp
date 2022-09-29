@@ -4,9 +4,9 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<title>Insert title here</title>
+<title>상품수정폼</title>
 </head>
 <body>
-메인화면
+<%= request.getAttribute("dataMap") %>
 </body>
 </html>
