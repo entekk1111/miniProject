@@ -18,6 +18,7 @@ dependencies {
 	developmentOnly 'org.springframework.boot:spring-boot-devtools'
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 	implementation 'org.jsoup:jsoup:1.14.2'
+	implementation group: 'org.webjars', name: 'jquery', version: '3.6.1'
 }
 
 tasks.named('test') {

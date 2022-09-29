@@ -14,33 +14,62 @@ import org.jsoup.select.Elements;
 
 public class JsoupComponentLocalMain {
 	
-	private static final String url = "https://www.ebay.com/itm/185419386840?epid=3051950252&hash=item2b2bdb4fd8%3Ag%3AvhUAAOSwgP1ivjL7&_trkparms=%2526rpp_cid%253D62ce7eccf492ecbbe49fa6fd&var=693214699892";
-	private static final String PRODUCT_CARD_CLASS = "dne-itemtile-detail";
-	private static final String PRODUCT_TITLE_CLASS = "dne-itemtile-title";
-	private static final String PRODUCT_LINK_SELECTOR = ".dne-itemtile-title a";
-	private static final String PRODUCT_PRICE_SELECTOR = ".dne-itemtile-price .first";
+	private static final String EBAY_PRODUCT_CARD_CLASS = "#CenterPanelInternal";
+	private static final String EBAY_PRODUCT_TITLE_CLASS = ".x-item-title__mainTitle";
+	private static final String EBAY_PRODUCT_PRICE_SELECTOR = "#prcIsum";
+	private static final String EBAY_PRODUCT_PICTURE_SELECTOR = "#PicturePanel";
 	
-	public Map<String, Object> process() {
-		Connection conn = Jsoup.connect(url);	//Jsoup 커넥션 생성
+	public List<Map<String, Object>> process(List<String> urlList) {
 		Document doc = null;
-		try {
-			doc = conn.get();
-		} catch (IOException e) {
-			e.printStackTrace();
+		Connection conn = null;
+		List<Map<String, Object>> result = new ArrayList<Map<String, Object>>();
+		
+		for(String url : urlList) {			
+			if(url.contains("http") || url.contains("https")) {				
+				conn = Jsoup.connect(url);	//Jsoup 커넥션 생성
+			}
+			
+			try {
+				doc = conn.get();
+				result.add(getDataList(doc));
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
 		}
 		
-		return getDataList(doc);
+		return result;
 	}
 	
 	public Map<String, Object> getDataList(Document document){
 		Map<String, Object> dataMap = new HashMap<String, Object>();
 		
-		Elements selects = document.select("#CenterPanelInternal");		//select 메서드 안에 css selector를 작성하여 Elecments를 가져올 수 있다.
+		Elements selects = document.select(EBAY_PRODUCT_CARD_CLASS);		//select 메서드 안에 css selector를 작성하여 Elecments를 가져올 수 있다.
 		
 		for(Element select : selects) {
-			String title = select.select(".x-item-title__mainTitle").text();
+			String title = select.select(EBAY_PRODUCT_TITLE_CLASS).text();		//상품제목
+			String optionKey = select.select("select").attr("name");			//옵션(제목)
 			
-			dataMap.put("title", title);
+			List<String> optionValues = new ArrayList<String>();				//옵션(항목)
+			if(select.select("option").size() > 0) {
+				for(Element value : select.select("option")) {
+					optionValues.add(value.text());
+				}
+			}
+			
+			String price = select.select(EBAY_PRODUCT_PRICE_SELECTOR).text();	//상품가격
+			
+			List<String> photos = new ArrayList<String>();						//옵션(항목)
+			if(select.select(".ux-image-carousel img").size() > 0) {
+				for(Element value : select.select("img")) {					
+					if(!value.attr("src").equals("")) photos.add(value.attr("src"));
+				}
+			}
+			
+			dataMap.put("title", title);						//제목
+			dataMap.put("optionKey", optionKey);				//옵션제목
+			dataMap.put("optionValues", optionValues);			//옵션값
+			dataMap.put("price", price);						//가격
+			dataMap.put("photos", photos);						//이미지
 		}
 		
 		return dataMap;

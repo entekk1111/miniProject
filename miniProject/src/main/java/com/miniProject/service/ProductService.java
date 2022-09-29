@@ -1,5 +1,6 @@
 package com.miniProject.service;
 
+import java.util.List;
 import java.util.Map;
 
 import org.springframework.stereotype.Service;
@@ -9,9 +10,9 @@ import com.miniProject.component.JsoupComponentLocalMain;
 @Service
 public class ProductService {
 
-	public Map<String, Object> getProductDetail() {
+	public List<Map<String, Object>> getProductDetail(List<String> urlList) {
 		JsoupComponentLocalMain cre = new JsoupComponentLocalMain();
 		
-		return cre.process();
+		return cre.process(urlList);
 	}
 }
