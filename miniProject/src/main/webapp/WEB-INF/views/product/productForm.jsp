@@ -28,6 +28,7 @@
 
 <script type="text/javascript">
 $('#productInfo').hide();
+//test
 
 //url추가
 var addUrl = function(){
