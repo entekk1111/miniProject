@@ -314,6 +314,8 @@
                   <div class="form-group">
                     <label for="example-text-input" class="form-control-label">Username</label>
                     <input class="form-control" type="text" value="lucky.jesse">
+                    <select class="form-select">
+                    	<option value="">dddd</option></select>
                   </div>
                 </div>
                 <div class="col-md-6">
