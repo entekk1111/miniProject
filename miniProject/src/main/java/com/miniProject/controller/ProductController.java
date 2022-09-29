@@ -21,9 +21,9 @@ public class ProductController {
 	
 	@RequestMapping(value = "/test", method = RequestMethod.GET)
 	public String test(Model model) {
-		
 		return "/product/profile";
 	}
+	
 	@RequestMapping(value = "/product", method = RequestMethod.GET)
 	public String getProductInfo(Model model) {
 		
