@@ -119,7 +119,7 @@ var getProductInfo = function(){
 					//가격
 					html += '<div>';
 					html += '	<label for="productPrice">가격</label>';
-					html += '	<input type="text" class="productPrice" value="' + dataItem.price + '">';
+					html += '	<input type="text" class="productPrice" name="productPrice" value="' + dataItem.price + '">';
 					html += '</div>';
 					
 					//사진
