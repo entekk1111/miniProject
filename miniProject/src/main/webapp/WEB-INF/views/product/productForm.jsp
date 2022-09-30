@@ -18,6 +18,8 @@
 	<hr>
 	<div id="productInfo">
 		<h4>상품정보</h4>
+		<input type="checkbox" value="all"/>
+		<button type="button" onclick="addCheckedProduct()">선택상품 업로드</button>
 		
 		<form id="submitForm">
 			<div id="productInfoDetail">
@@ -44,6 +46,11 @@ var addUrl = function(){
 	
 };
 
+//사진 삭제
+var delPhoto = function(obj){
+	$(obj).parent().remove();
+};
+
 //상품 정보 가져오기
 var getProductInfo = function(){
 	var urlArr = [];
@@ -61,12 +68,14 @@ var getProductInfo = function(){
 			if(data != null && data != undefined && data != ''){
 				for(var i = 0; i < data.length; i++){					
 					var dataItem = data[i];
+					html += '<div class="product' + i + '">';
+					html += '	<input type="checkbox" value="' + dataItem.title + '">';
 					
 					//상품명
 					html += '<div>';
 					html += '	<label for="productTitle">상품명</label>';
 					html += '	<input type="text" class="productTitle" value="' + dataItem.title + '">';
-					html += '	<button type="button" onclick="addProduct()">해당상품 업로드</button>';
+// 					html += '	<button type="button" onclick="addProduct()">해당상품 업로드</button>';
 					html += '</div>';
 					
 					//옵션
@@ -93,14 +102,20 @@ var getProductInfo = function(){
 					html += '</div>';
 					
 					//사진
-					html += '<div>';
-					html += '	<label for="productPhotos">사진</label>';
-					html += '	<div>';					
-					for(var item of dataItem.photos){						
-						html += '	<img alt="photo" src="' + item + '" style="width:250px;">';
-						html += '	<input type="hidden" name="productPhoto" value="' + item + '">';
+					if(dataItem.photos != null && dataItem.photos != '' && dataItem.photos != undefined){						
+						html += '<div>';
+						html += '	<label for="productPhotos">사진</label>';
+						html += '	<div>';					
+						for(var item of dataItem.photos){						
+							html += '	<div>';					
+							html += '		<img alt="photo" src="' + item + '" style="width:250px;">';
+							html += '		<input type="hidden" name="productPhoto" value="' + item + '">';
+							html += '		<button type="button" onclick="delPhoto(this)">X</button>';
+							html += '	</div>';
+						}
+						html += '	</div>';
+						html += '</div>';
 					}
-					html += '	</div>';
 					html += '</div>';
 					html += '<hr>';
 				}
