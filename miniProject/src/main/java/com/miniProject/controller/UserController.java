@@ -1,14 +1,14 @@
 package com.miniProject.controller;
 
-import java.util.Map;
+import java.util.HashMap;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.miniProject.service.UserService;
@@ -19,28 +19,21 @@ public class UserController {
 	@Autowired
 	private UserService userService;
 	
-	/**
-	 * 회원가입화면
-	 * 
-	 * @param model
-	 * @return
-	 */
-	@RequestMapping(value = "/signUp", method = RequestMethod.GET)
+	@GetMapping("/signUp")
 	public String sign(Model model) {
-		return "signUp";
+		return "/user/signUp";
 	}
 	
-	/**
-	 * 회원가입처리
-	 * 
-	 * @param model
-	 * @param inMap
-	 * @return
-	 * @throws Exception
-	 */
-	@RequestMapping(value = "/signUp", method = RequestMethod.POST)
-	public @ResponseBody int saveUser(@RequestBody Map<String, Object> inMap) throws Exception {
-		int result = userService.joinUser(inMap);
+    @GetMapping("/login")
+    public String login() {
+        return "/user/loginForm";
+    }
+	
+	@RequestMapping(value="/register", method = RequestMethod.POST)
+	@ResponseBody
+	public int singUp(@RequestBody HashMap<String, Object> paramMap) throws Exception {
+		System.out.println(paramMap);
+		int result = userService.joinUser(paramMap);
 		return result;
 	}
 }

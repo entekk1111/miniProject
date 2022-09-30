@@ -8,6 +8,8 @@
         	MEMUSERID
         	, MPASSWORD
         	, MEMBERMAIL
+        	, MEMBERAGE
+        	, MEMBERSEX
         	, MEREGDATE
         	, MEREGUSER
         	, MEUPTDATE
@@ -16,11 +18,25 @@
         	#{userId}
         	, #{userPw}
         	, #{userEmail}
+        	, #{age}
+        	, #{gender}
         	, NOW()
         	, #{userId}
         	, NOW()
         	, #{userId}
        	)
 	</insert>
+	
+	<!-- 가입회원확인 -->
+	<select id="getUserAccount" parameterType="String" resultType="com.miniProject.common.user.CustomUserDetails">
+		SELECT MEMUSERID AS username
+            , MEMBERNUM
+            , MPASSWORD AS password
+            , MEMBERMAIL
+            , MEMBERAGE
+            , MEMBERSEX
+		FROM MEMBER
+		WHERE MEMUSERID = #{username} AND AVAILABLE = 'Y'
+	</select>
 	
 </mapper>
