@@ -55,13 +55,13 @@
 				<div class="position-sticky pt-3">
 					<ul class="nav flex-column">
 						<li class="nav-item">
-							<a class="nav-link active" aria-current="page" href="/product">
+							<a class="nav-link" aria-current="page" href="/product">
 								<span data-feather="home"></span>
 								상품등록
 							</a>
 						</li>
 						<li class="nav-item">
-							<a class="nav-link" href="/productList">
+							<a class="nav-link active" href="/productList">
 								<span data-feather="file"></span>
 								상품목록
 							</a>

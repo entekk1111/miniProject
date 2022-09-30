@@ -4,6 +4,7 @@
 <html>
 <head>
 	<script src="/webjars/jquery/3.6.1/jquery.min.js"></script>
+	<script src="/js/bootstrap.min.js"></script>
 	<meta name="_csrf" content="${_csrf.token}">
 	<meta name="_csrf_header" content="${_csrf.headerName}">
 	<meta charset="utf-8">
@@ -48,7 +49,6 @@
 		</div>
 	</div>
 </header>
-
 <div class="container-fluid">
 	<div class="row">
 		<nav id="sidebarMenu" class="col-md-3 col-lg-2 d-md-block bg-light sidebar collapse">
@@ -67,39 +67,6 @@
 						</a>
 					</li>
 				</ul>
-			
-<!-- 				<h6 class="sidebar-heading d-flex justify-content-between align-items-center px-3 mt-4 mb-1 text-muted"> -->
-<!-- 					<span>Saved reports</span> -->
-<!-- 					<a class="link-secondary" href="#" aria-label="Add a new report"> -->
-<!-- 						<span data-feather="plus-circle"></span> -->
-<!-- 					</a> -->
-<!-- 				</h6> -->
-<!-- 				<ul class="nav flex-column mb-2"> -->
-<!-- 					<li class="nav-item"> -->
-<!-- 						<a class="nav-link" href="#"> -->
-<!-- 							<span data-feather="file-text"></span> -->
-<!-- 							Current month -->
-<!-- 						</a> -->
-<!-- 					</li> -->
-<!-- 					<li class="nav-item"> -->
-<!-- 						<a class="nav-link" href="#"> -->
-<!-- 							<span data-feather="file-text"></span> -->
-<!-- 							Last quarter -->
-<!-- 						</a> -->
-<!-- 					</li> -->
-<!-- 					<li class="nav-item"> -->
-<!-- 						<a class="nav-link" href="#"> -->
-<!-- 							<span data-feather="file-text"></span> -->
-<!-- 							Social engagement -->
-<!-- 						</a> -->
-<!-- 					</li> -->
-<!-- 					<li class="nav-item"> -->
-<!-- 						<a class="nav-link" href="#"> -->
-<!-- 							<span data-feather="file-text"></span> -->
-<!-- 							Year-end sale -->
-<!-- 						</a> -->
-<!-- 					</li> -->
-<!-- 				</ul> -->
 			</div>
 		</nav>
 	
@@ -108,38 +75,66 @@
 				<h1 class="h2">상품등록</h1>
 				<div class="btn-toolbar mb-2 mb-md-0">
 					<div class="btn-group me-2">
-						<button type="button" class="btn btn-sm btn-outline-secondary">Share</button>
-						<button type="button" class="btn btn-sm btn-outline-secondary">Export</button>
+						<button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#urlOpenModal">
+							URL수집하기
+						</button>
 					</div>
-					<button type="button" class="btn btn-sm btn-outline-secondary dropdown-toggle">
-						<span data-feather="calendar"></span>
-						This week
-					</button>
 				</div>
 			</div>
-		
-			<button type="button" onclick="addUrl()">url박스추가</button>
-			<div id="urlForm">
-				<input type="text" name="url">
+			<div class="pt-3 pb-2 mb-3 ms-2">
+				<label for="allCheck">
+					<input type="checkbox" id="allCheck" class="form-check-input" value="all" onclick="allCheck()">
+					<span>
+						총 26개 중 20개의 상품 표시중 / 0개 선택됨
+					</span>
+				</label>
 			</div>
-			<button type="button" onclick="getProductInfo()">상품정보 가져오기</button>
-			<hr>
-			<div id="productInfo">
-				<h4>상품정보</h4>
-				<input type="checkbox" id="allCheck" value="all" onclick="allCheck()"/>
-				<button type="button" onclick="addCheckedProduct()">선택상품 업로드</button>
-				
-				<form id="submitForm" name="submitForm">
-					<div id="productInfoDetail">
-						
-					</div>
-				</form>
-				
-			</div>
+			<form id="submitForm" name="submitForm">
+				<ul class="nav nav-tabs">
+					<li class="nav-item">
+						<input type="checkbox" class="mx-3 mt-2 form-check-input prCheck">
+					</li>
+					<li class="nav-item">
+						<a id="aTab" class="nav-link active" href="javascript:void(0)" onclick="changeTab('A')">기본정보</a>
+					</li>
+					<li class="nav-item">
+						<a id="bTab" class="nav-link" href="javascript:void(0)" onclick="changeTab('B')">상세페이지</a>
+					</li>
+				</ul>
+				<div class="h-100 p-5 bg-light border rounded-3">
+					<h2>URL로 상품을 수집해주세요.</h2>
+					<p><span class="text-primary">상세페이지 URL</span>을 복사해서 붙여넣기한 다음 <span class="text-primary">상품 가져오기</span>를 눌러주세요!</p>
+					<button type="button" class="btn btn-outline-primary" data-bs-toggle="modal" data-bs-target="#urlOpenModal">
+						URL수집하기
+					</button>
+		        </div>
+			</form>
 		</main>
 	</div>
 </div>
-      
+<!-- url 수집 모달 -->
+<div class="modal fade" id="urlOpenModal" tabindex="-1" aria-labelledby="urlOpenModalLabel" aria-hidden="true">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h5 class="modal-title me-2" id="urlOpenModalLabel">URL로 상품수집</h5>
+				<button type="button" class="btn btn-primary btn-sm" onclick="addUrl()">URL입력창 추가</button>
+				<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+			</div>
+			<div class="modal-body">
+				<div id="urlForm">
+					<div class="input-group">
+						<input type="text" name="url" class="form-control" placeholder="URL을 입력해주세요.">
+					</div>
+				</div>
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">취소</button>
+				<button type="button" class="btn btn-primary" onclick="getProductInfo()">상품 가져오기</button>
+			</div>
+		</div>
+	</div>
+</div>   
 </body>
 
 <script type="text/javascript">
@@ -152,9 +147,28 @@ $(document).ajaxSend(function(e, xhr, options) {
     xhr.setRequestHeader(header, token);
 });
 
+//url추가 폼 삭제
+var delInputUrl = function(obj){
+	$(obj).parent().remove();
+};
+
 //url추가
 var addUrl = function(){
-	$('#urlForm').append('<input type="text" name="url">');
+	$('#urlForm').append('<div class="input-group mt-2">'
+							+'<input type="text" name="url" class="form-control" placeholder="URL을 입력해주세요.">'
+							+'<button type="button" class="btn btn-secondary" onclick="delInputUrl(this)">X</button>'
+						+'</div>');
+};
+
+//tab active 변경
+var changeTab = function(type){
+	if(type == 'A'){
+		$('#aTab').addClass('active');
+		$('#bTab').removeClass('active');
+	}else if(type == 'B'){
+		$('#bTab').addClass('active');		
+		$('#aTab').removeClass('active');
+	}
 };
 
 //사진 삭제
