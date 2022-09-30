@@ -18,10 +18,10 @@
 	<hr>
 	<div id="productInfo">
 		<h4>상품정보</h4>
-		<input type="checkbox" value="all"/>
+		<input type="checkbox" id="allCheck" value="all" onclick="allCheck()"/>
 		<button type="button" onclick="addCheckedProduct()">선택상품 업로드</button>
 		
-		<form id="submitForm">
+		<form id="submitForm" name="submitForm">
 			<div id="productInfoDetail">
 				
 			</div>
@@ -43,12 +43,33 @@ $(document).ajaxSend(function(e, xhr, options) {
 //url추가
 var addUrl = function(){
 	$('#urlForm').append('<input type="text" name="url">');
-	
 };
 
 //사진 삭제
 var delPhoto = function(obj){
 	$(obj).parent().remove();
+};
+
+//전체 선택
+var allCheck = function(){
+	if($('#allCheck').is(':checked')){		
+		$('.prCheck').prop('checked', true);
+	}else{
+		$('.prCheck').prop('checked', false);		
+	}
+};
+
+//상품 업로드
+var addCheckedProduct = function(){
+	$.ajax({
+		type: "post",
+		url:"/addCheckedProduct",
+		data: $('#submitForm').serialize(),
+		success : function(data){
+		},
+		error : function(fail){
+		}
+	});
 };
 
 //상품 정보 가져오기
@@ -69,12 +90,12 @@ var getProductInfo = function(){
 				for(var i = 0; i < data.length; i++){					
 					var dataItem = data[i];
 					html += '<div class="product' + i + '">';
-					html += '	<input type="checkbox" value="' + dataItem.title + '">';
+					html += '	<input type="checkbox" class="prCheck" value="' + dataItem.title + '">';
 					
 					//상품명
 					html += '<div>';
 					html += '	<label for="productTitle">상품명</label>';
-					html += '	<input type="text" class="productTitle" value="' + dataItem.title + '">';
+					html += '	<input type="text" class="productTitle" name="productTitle" value="' + dataItem.title + '">';
 // 					html += '	<button type="button" onclick="addProduct()">해당상품 업로드</button>';
 					html += '</div>';
 					
@@ -89,7 +110,7 @@ var getProductInfo = function(){
 						//옵션값
 						html += '<div>';
 						for(var item of dataItem.optionValues){						
-							html += '		<input type="checkbox" name="optionValueCheck" value="' + item + '_ck">';
+							html += '		<input type="checkbox" name="optionValueCheck" value="' + item + '_ck" checked>';
 							html += '		<input type="text" name="optionValue" value="' + item + '"><br>';
 						}
 						html += '</div>';
