@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE tiles-definitions PUBLIC
+	"-//Apache Software Foundation//DTD Tiles Configuration 3.0//EN"
+	"http://tiles.apache.org/dtds/tiles-config_3_0.dtd">
+<tiles-definitions>
+
+	<!-- Template layout Setting  -->
+	<!-- DEFAULT -->
+	<definition name="layout-normal" template="/WEB-INF/tiles/layouts/layout_default.jsp">
+		<put-attribute name="title" value="" />
+		<put-attribute name="gnb" value="/WEB-INF/tiles/layouts/gnb.jsp" />
+		<put-attribute name="header" value="/WEB-INF/tiles/layouts/header.jsp" />
+		<put-attribute name="body" value="" />
+		<put-attribute name="footer" value="" />
+	</definition>
+	<!-- LOGIN -->
+	<definition name="layout-login" template="/WEB-INF/tiles/layouts/layout_default_login.jsp">
+		<put-attribute name="title" value="MINIPROJECT" />
+		<put-attribute name="body" value="" />
+	</definition>
+	
+	
+	<!-- Layout mapping  -->
+	<!-- LOGIN -->
+	<definition name="/user/*" extends="layout-login">
+		<put-attribute name="body" value="/WEB-INF/views/user/{1}.jsp" />
+	</definition>
+	
+	<!-- MAIN_DEFAULT (프로덕트관련) tils>layouts 폴더에서 layout_dafault.jsp 설정대로 gnb, header body 부분 나눠주시면 됩니다.--> 
+<!-- 	<definition name="/product/*" extends="layout-normal"> -->
+<!-- 		<put-attribute name="title" value="" /> -->
+<!-- 		<put-attribute name="body" value="/WEB-INF/views/*/{1}.jsp" /> -->
+<!-- 	</definition> -->
+	
+</tiles-definitions>

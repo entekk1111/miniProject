@@ -1,16 +1,5 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
  
-<!DOCTYPE html>
-<html>
-<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
-<head>
-	<meta charset="UTF-8">
-	<title>회원가입폼</title>
-	<meta name="_csrf" content="${_csrf.token}">
-	<meta name="_csrf_header" content="${_csrf.headerName}">
-	<script src="/webjars/jquery/3.6.1/jquery.min.js"></script>
-</head>
-<body>
 	<form id="regiForm">
 	    <div class="container">
 	        <h1>회원가입</h1>
@@ -77,7 +66,7 @@
 	        <button type="button" id="register" class="btn btn-primary">가입 완료</button>
 	    </div>
 	</form>
-</body>
+<!-- </body> -->
 
 <script type="text/javascript">
 	var token = $("meta[name='_csrf']").attr("content");
@@ -119,4 +108,3 @@
 		});
 	});
 </script>
-</html>

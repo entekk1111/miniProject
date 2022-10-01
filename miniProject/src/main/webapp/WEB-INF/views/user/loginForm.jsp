@@ -3,12 +3,16 @@
 <!DOCTYPE html>
 <html>
 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+
 <head>
 	<meta charset="UTF-8">
 	<title>로그인</title>
 	<meta name="_csrf" content="${_csrf.token}">
 	<meta name="_csrf_header" content="${_csrf.headerName}">
 	<script src="/webjars/jquery/3.6.1/jquery.min.js"></script>
+	<script src="/js/bootstrap.min.js"></script>
+<!-- Bootstrap core CSS -->
+	<link href="/css/bootstrap.min.css" rel="stylesheet" >
 </head>
 <body>
 	<div class="container">
