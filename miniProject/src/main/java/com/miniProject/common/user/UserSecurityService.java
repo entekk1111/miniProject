@@ -27,6 +27,7 @@ public class UserSecurityService implements UserDetailsService {
 		if(cUserDetail == null){
 			throw new UsernameNotFoundException("사용자를 찾을수 없습니다.");
 		}
+		System.out.println(cUserDetail.getEmail());
 		return cUserDetail;
          
 //         Optional<SiteUser> user = this.userMapper.userCheck(username);

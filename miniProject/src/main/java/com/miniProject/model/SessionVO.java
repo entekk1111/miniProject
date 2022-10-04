@@ -11,7 +11,16 @@ public class SessionVO implements Serializable {
 	String sex;
 	String age;
 	String userAuth;
+	String memberNum;
 	
+	public String getMemberNum() {
+		return memberNum;
+	}
+
+	public void setMemberNum(String memberNum) {
+		this.memberNum = memberNum;
+	}
+
 	@Override
 	public String toString() {
 		// TODO Auto-generated method stub
@@ -66,14 +75,14 @@ public class SessionVO implements Serializable {
 		this.userAuth = userAuth;
 	}
 
-	public SessionVO(String id, String password, String email, String sex, String age, String userAuth) {
-		super();
-		this.id = id;
-		this.password = password;
-		this.email = email;
-		this.sex = sex;
-		this.age = age;
-		this.userAuth = userAuth;
-	}
+//	public SessionVO(String id, String password, String email, String sex, String age, String userAuth) {
+//		super();
+//		this.id = id;
+//		this.password = password;
+//		this.email = email;
+//		this.sex = sex;
+//		this.age = age;
+//		this.userAuth = userAuth;
+//	}
     
 }

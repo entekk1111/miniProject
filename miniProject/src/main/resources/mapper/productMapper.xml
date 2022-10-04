@@ -70,4 +70,16 @@
 	
 	</select>
 	
+	<select id="getProductList" parameterType="Map">
+		SELECT 
+			PRODUCNUM
+			, PRODCNAME
+			, PRODPRICE
+			, PRREGDATE
+		FROM product
+		WHERE MEMBERNUM = #{memberNum}
+	</select>
+	
+	
+	
 </mapper>

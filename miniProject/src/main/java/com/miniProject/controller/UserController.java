@@ -36,4 +36,6 @@ public class UserController {
 		int result = userService.joinUser(paramMap);
 		return result;
 	}
+	
+	
 }

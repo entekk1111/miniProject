@@ -30,11 +30,22 @@
 	<!-- 가입회원확인 -->
 	<select id="getUserAccount" parameterType="String" resultType="com.miniProject.common.user.CustomUserDetails">
 		SELECT MEMUSERID AS username
-            , MEMBERNUM
+            , MEMBERNUM as userNum
             , MPASSWORD AS password
-            , MEMBERMAIL
-            , MEMBERAGE
-            , MEMBERSEX
+            , MEMBERMAIL AS email
+            , MEMBERAGE AS age
+            , MEMBERSEX AS sex
+		FROM MEMBER
+		WHERE MEMUSERID = #{username} AND AVAILABLE = 'Y'
+	</select>
+	
+	<select id="getUserInfo" resultType="com.miniProject.model.SessionVO">
+	
+		SELECT MEMUSERID AS id
+            , MEMBERNUM as memberNum
+            , MEMBERMAIL AS email
+            , MEMBERAGE AS age
+            , MEMBERSEX AS sex
 		FROM MEMBER
 		WHERE MEMUSERID = #{username} AND AVAILABLE = 'Y'
 	</select>
