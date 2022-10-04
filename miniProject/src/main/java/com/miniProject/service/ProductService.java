@@ -69,9 +69,9 @@ public class ProductService {
 				optionMap.put("OPTIVALUE", item);								//상품옵션값
 				optionList.add(optionMap);
 			}
+			productMapper.addOption(optionList);
 		}
 
-		productMapper.addOption(optionList);
 		
 		return 0;
 	}
