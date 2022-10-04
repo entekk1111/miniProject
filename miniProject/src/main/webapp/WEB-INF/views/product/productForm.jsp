@@ -102,7 +102,7 @@
 					</span>
 				</label>
 				
-				<button type="button" class="btn btn-primary" onclick="addCheckedProduct()">
+				<button type="button" id="submitBtn" class="btn btn-primary" onclick="addCheckedProduct()" disabled>
 					선택한 상품 업로드
 				</button>
 			</div>
@@ -247,6 +247,15 @@ var addCheckedProduct = function(){
 	});
 };
 
+//옵션 상태 변경
+var changeOption = function(obj){
+	if($(obj).is(':checked')){
+		$(obj).parent().find('input[name="optionValue"]').attr('readonly', false);
+	}else{
+		$(obj).parent().find('input[name="optionValue"]').attr('readonly', true);	
+	}
+};
+
 //상품 정보 가져오기
 var getProductInfo = function(){
 	var urlArr = [];
@@ -306,7 +315,7 @@ var getProductInfo = function(){
 					//가격
 					html += '							<div class="col-sm-12">                                                                                                                              ';
 					html += '								<label for="lastName" class="form-label">가격</label>                                                                                            ';
-					html += '								<input type="text" class="form-control" id="lastName" placeholder="" value="' + dataItem.price + '" required="">                                                       ';
+					html += '								<input type="text" class="form-control" id="lastName" placeholder="" name="productPrice" value="' + dataItem.price + '" required="">                                                       ';
 					html += '								<div class="invalid-feedback">                                                                                                                   ';
 					html += '									Valid last name is required.                                                                                                                 ';
 					html += '								</div>                                                                                                                                           ';
@@ -317,7 +326,7 @@ var getProductInfo = function(){
 					if(dataItem.optionKey != null && dataItem.optionKey != '' && dataItem.optionKey != undefined){						
 						html += '							<div class="col-sm-12">                                                                                                                              ';
 						html += '								<label for="lastName" class="form-label">옵션명</label>                                                                                          ';
-						html += '								<input type="text" class="form-control" id="lastName" placeholder="" value="' + dataItem.optionKey + '" required="">                                                       ';
+						html += '								<input type="text" class="form-control" id="lastName" placeholder="" name="optionKey" value="' + dataItem.optionKey + '" required="">                                                       ';
 						html += '								<div class="invalid-feedback">                                                                                                                   ';
 						html += '									Valid last name is required.                                                                                                                 ';
 						html += '								</div>                                                                                                                                           ';
@@ -326,8 +335,13 @@ var getProductInfo = function(){
 						//옵션값
 					    for(var j = 0; j < dataItem.optionValues.length; j++){	
 							html += '								<div class="form-check">                                                                                                                         ';
-							html += '									<input type="checkbox" class="form-check-input" id="same-address_' + j + '" value="' + dataItem.optionValues[j] + '_ck' + '" checked>                                                                           ';
-							html += '									<input type="text" class="form-control" id="lastName" placeholder="" value="' + dataItem.optionValues[j] + '" required="">                                                       ';
+							if(dataItem.optionValues[j].includes('품절')){	//품절이면 disabled							
+								html += '									<input type="checkbox" class="form-check-input" id="same-address_' + j + '" value="' + dataItem.optionValues[j] + '_ck' + '" onclick="changeOption(this)" disabled>                                                                           ';
+								html += '									<input type="text" class="form-control" placeholder="" name="optionValue" value="' + dataItem.optionValues[j] + '" readonly>                                                       ';
+							}else{											
+								html += '									<input type="checkbox" class="form-check-input" id="same-address_' + j + '" value="' + dataItem.optionValues[j] + '_ck' + '" onclick="changeOption(this)" checked>                                                                           ';
+								html += '									<input type="text" class="form-control" placeholder="" name="optionValue" value="' + dataItem.optionValues[j] + '" required="">                                                       ';
+							}
 							html += '								</div>                                                                                                                                          ';							
 						}
 						html += '							</div>                                                                                                                                               ';
@@ -346,7 +360,8 @@ var getProductInfo = function(){
 						html += '								<div class="card text-end">                                                                                                                      ';
 						html += '									<div class="card-body">                                                                                                                      ';
 						html += '										<button type="button" class="btn btn-secondary" onclick="delPhoto(' + i + ',' + z + ')"><i class="fa-solid fa-x"></i></button>                           ';
-						html += '										<img src="' + dataItem.photos[z] + '" class="card-img-top" alt="...">                                    ';
+						html += '										<img src="' + dataItem.photos[z] + '" class="card-img-top" alt="...">                                    ';						
+						html += '										<input type="hidden" name="productPhoto" value="' + dataItem.photos[z] + '">                                                                                                                                       ';
 						html += '									</div>                                                                                                                                       ';
 						html += '								</div>                                                                                                                                           ';
 						html += '							</div>                                                                                                                                               ';
@@ -359,7 +374,7 @@ var getProductInfo = function(){
 					//상세페이지
 					html += '					<!-- 상품 상세 -->                                                                                                                                           ';
 					html += '					<div id="productDetail" class="form-floating bTabCard_' + i + ' d-none">                                                                                             ';
-					html += '						<textarea contenteditable="true" class="form-control editable summernote" placeholder="Leave a comment here" style="height: 100px">' + data[0].details + '</textarea>      ';
+					html += '						<textarea contenteditable="true" class="form-control editable summernote" name="productDetail" placeholder="Leave a comment here" style="height: 100px">' + data[0].details + '</textarea>      ';
 					html += '					</div>                                                                                                                                                       ';
 				    html += '   		 		</div>                                                                                                                                                       ';
 					html += '			</div>                                                                                                                                                               ';
@@ -370,11 +385,12 @@ var getProductInfo = function(){
 			}
 			
 			$('#productCard').html(html);			//상품 정보 넣기
-			$('#prCount').text(data.length);	//불러온 상품 갯수
+			$('#prCount').text(data.length);		//불러온 상품 갯수
 			$('#urlOpenModal').modal('hide');		//url 오픈 모달 숨김
 			$('#guidanceMsg').addClass('d-none');	//가이드문구 숨김
 			$('#submitForm').removeClass('d-none');	//상품정보 노출
-			summernote(); //써머노트 적용
+			$('#submitBtn').removeAttr('disabled');	//선택한 상품 업로드 버튼 풀기
+			summernote(); 							//써머노트 적용
 		},
 		error : function(fail){
 		}
