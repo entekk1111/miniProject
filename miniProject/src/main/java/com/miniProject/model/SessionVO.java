@@ -2,12 +2,22 @@ package com.miniProject.model;
 
 import java.io.Serializable;
 
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Pattern;
+
 public class SessionVO implements Serializable {
 
 	private static final long serialVersionUID = 4087574708765700516L;
+	@NotBlank(message = "아이디를 입력해 주세요")
 	String id;
+	
+	@NotBlank(message = "비밀번호를 입력해 주세요")
 	String password;
+	
+	@Pattern(regexp = "^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+.[A-Za-z]{2,6}$", message = "이메일 형식이 올바르지 않습니다.")    
+	@NotBlank(message = "이메일은 필수 입력 값입니다.")
 	String email;
+	
 	String sex;
 	String age;
 	String userAuth;

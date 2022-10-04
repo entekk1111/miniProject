@@ -18,5 +18,28 @@ public interface ProductMapper {
 	 * 옵션 업로드
 	 */
 	int addOption(List<Map<String, String>> listMap);
+	
+	/**
+	 * 
+	 * @param memberNum
+	 * @return 상품게시판리스트
+	 */
+	List<Map<String, Object>> getProductList(Map<String, Object> inMap);
+	
+	/**
+	 * 상품리스트 총갯수
+	 * 
+	 * @param inMap
+	 * @return
+	 */
+	int getTotalCount(Map<String, Object> inMap);
+	
+	/**
+	 * 선택상품 삭제
+	 * 
+	 * @param paramMap
+	 * @return
+	 */
+	int deleteProduct(Map<String, Object> paramMap);
 
 }
