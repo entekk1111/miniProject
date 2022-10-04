@@ -236,13 +236,38 @@ var allCheck = function(){
 
 //상품 업로드
 var addCheckedProduct = function(){
+	var data = '';
+
+	if($('.prCheck:checked').length == 0){
+		alert('최소 한가지는 선택해야 합니다.');
+		return false;
+	}
+	
+	$('.prCheck').each(function(){
+		//체크 안되어있는것 disabled 처리
+		if(!$(this).is(':checked')){
+			var index = $(this).data('index');
+			$('.product_' + index).find('input').attr('disabled', true);
+			data = $('#submitForm').serialize();
+		}
+	});
+	
 	$.ajax({
 		type: "post",
 		url:"/addCheckedProduct",
-		data: $('#submitForm').serialize(),
+		data: data,
 		success : function(data){
+			alert('업로드완료');
 		},
 		error : function(fail){
+		}
+	});
+	
+	$('.prCheck').each(function(){
+		//체크 안되어있는것 disabled 처리
+		if(!$(this).is(':checked')){
+			var index = $(this).data('index');
+			$('.product_' + index).find('input').attr('disabled', false);
 		}
 	});
 };
@@ -277,7 +302,7 @@ var getProductInfo = function(){
 					html += '<div class="product_' + i + ' mt-4">   																																			 ';
 					html += '	<ul class="nav nav-tabs accordion">                                                                                                                                          ';
 					html += '		<li class="nav-item">                                                                                                                                                    ';
-					html += '			<input type="checkbox" class="mx-3 mt-2 form-check-input prCheck" onclick="checkedCount()">                                                                                                   ';
+					html += '			<input type="checkbox" class="mx-3 mt-2 form-check-input prCheck" data-index="' + i + '" onclick="checkedCount()" checked>                                                                                                   ';
 					html += '		</li>                                                                                                                                                                    ';
 					html += '		<li class="nav-item">                                                                                                                                                    ';
 					html += '			<a class="nav-link active aTab_' + i + '" href="javascript:void(0)" onclick="changeTab(\'A\', ' + i + ')">기본정보</a>                                                                 ';
@@ -345,6 +370,10 @@ var getProductInfo = function(){
 							html += '								</div>                                                                                                                                          ';							
 						}
 						html += '							</div>                                                                                                                                               ';
+					}else{
+						html += '<div class="col-sm-12">'
+						html += '<button type="button">옵션 추가</button>'
+						html += '</div>                                                                                                                                                   ';
 					}
 					html += '						</div>                                                                                                                                                   ';
 					html += '						                                                                                                                                                         ';
@@ -385,7 +414,8 @@ var getProductInfo = function(){
 			}
 			
 			$('#productCard').html(html);			//상품 정보 넣기
-			$('#prCount').text(data.length);		//불러온 상품 갯수
+			$('#allCheck').attr('checked', true);					//전체체크로 
+			$('#prCount, #prCheckedCount').text(data.length);		//불러온 상품 갯수
 			$('#urlOpenModal').modal('hide');		//url 오픈 모달 숨김
 			$('#guidanceMsg').addClass('d-none');	//가이드문구 숨김
 			$('#submitForm').removeClass('d-none');	//상품정보 노출
