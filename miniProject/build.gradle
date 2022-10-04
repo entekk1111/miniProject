@@ -37,6 +37,7 @@ dependencies {
 	implementation 'org.apache.tiles:tiles-api:3.0.8'
 	implementation 'org.apache.tiles:tiles-el:3.0.8'
 	
+	implementation 'org.springframework.boot:spring-boot-starter-validation'
 
 	
 }

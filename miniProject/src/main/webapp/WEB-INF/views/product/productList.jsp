@@ -1,5 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <!DOCTYPE html>
 <html>
 <head>
@@ -18,7 +19,7 @@
     <link rel="canonical" href="https://getbootstrap.com/docs/5.1/examples/dashboard/">
 
     <!-- Bootstrap core CSS -->
-	<link href="/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
+	<link href="/css/bootstrap.min.css" rel="stylesheet" >
 
     <style>
       .bd-placeholder-img {
@@ -44,12 +45,22 @@
 		</button>
 		<div class="navbar-nav">
 			<div class="nav-item text-nowrap">
-				<a class="nav-link px-3" href="javascript:void(0)">Sign out</a>
+				<c:if test="${userId ne null }">
+					<a class="nav-link px-3" id="logoutBtn" href="/logout">${userId } 님</a>
+				</c:if>
 			</div>
 		</div>
 	</header>
 
 	<div class="container-fluid">
+	
+		<form name="pageForm" id="paging" method="GET" action="/productList">
+			<input type="hidden" name="page" id="page" value="${inData.page }" />
+			<input type="hidden" name="pageSize" value="${inData.pageSize }" />
+			<input type="hidden" name="searchType" value="${inData.searchType }" />
+			<input type="hidden" name="searchWord" value="${inData.searchWord }" />
+		</form>
+		
 		<div class="row">
 			<nav id="sidebarMenu" class="col-md-3 col-lg-2 d-md-block bg-light sidebar collapse">
 				<div class="position-sticky pt-3">
@@ -105,148 +116,145 @@
 		
 			<main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
 				<div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
-					<h1 class="h2">Dashboard</h1>
+					<h1 class="h2">상품목록</h1>
+				</div>
+				<div class="pt-3 pb-2 mb-3 ms-2">
+					<label for="allCheck">
+						<span>
+							총 ${totalCount}개 중 00개의 상품 표시중 /
+						</span>
+						<span id="checkCnt">0</span>
+						<span>
+							개 선택됨
+						</span>
+					</label>
 					<div class="btn-toolbar mb-2 mb-md-0">
 						<div class="btn-group me-2">
-							<button type="button" class="btn btn-sm btn-outline-secondary">Share</button>
-							<button type="button" class="btn btn-sm btn-outline-secondary">Export</button>
+							<button type="button" class="btn btn-primary" onclick="delBtn()">
+								선택한 상품 삭제
+							</button>
 						</div>
-						<button type="button" class="btn btn-sm btn-outline-secondary dropdown-toggle">
-							<span data-feather="calendar"></span>
-							This week
-						</button>
 					</div>
 				</div>
 			
 				<div class="table-responsive">
 					<table class="table table-striped table-sm">
+					
 						<thead>
 							<tr>
-								<th scope="col">#</th>
-								<th scope="col">Header</th>
-								<th scope="col">Header</th>
-								<th scope="col">Header</th>
-								<th scope="col">Header</th>
+								<th scope="col"><input type='checkbox' id='checkAll' /></th>
+								<th scope="col">상품명</th>
+								<th scope="col">판매가</th>
+								<th scope="col">수정</th>
+								<th scope="col">상품등록일</th>
 							</tr>
 						</thead>
+						
 						<tbody>
-							<tr>
-								<td>1,001</td>
-								<td>random</td>
-								<td>data</td>
-								<td>placeholder</td>
-								<td>text</td>
-							</tr>
-							<tr>
-								<td>1,002</td>
-								<td>placeholder</td>
-								<td>irrelevant</td>
-								<td>visual</td>
-								<td>layout</td>
-							</tr>
-							<tr>
-								<td>1,003</td>
-								<td>data</td>
-								<td>rich</td>
-								<td>dashboard</td>
-								<td>tabular</td>
-							</tr>
-							<tr>
-								<td>1,003</td>
-								<td>information</td>
-								<td>placeholder</td>
-								<td>illustrative</td>
-								<td>data</td>
-							</tr>
-							<tr>
-								<td>1,004</td>
-								<td>text</td>
-								<td>random</td>
-								<td>layout</td>
-								<td>dashboard</td>
-							</tr>
-							<tr>
-								<td>1,005</td>
-								<td>dashboard</td>
-								<td>irrelevant</td>
-								<td>text</td>
-								<td>placeholder</td>
-							</tr>
-							<tr>
-								<td>1,006</td>
-								<td>dashboard</td>
-								<td>illustrative</td>
-								<td>rich</td>
-								<td>data</td>
-							</tr>
-							<tr>
-								<td>1,007</td>
-								<td>placeholder</td>
-								<td>tabular</td>
-								<td>information</td>
-								<td>irrelevant</td>
-							</tr>
-							<tr>
-								<td>1,008</td>
-								<td>random</td>
-								<td>data</td>
-								<td>placeholder</td>
-								<td>text</td>
-							</tr>
-							<tr>
-								<td>1,009</td>
-								<td>placeholder</td>
-								<td>irrelevant</td>
-								<td>visual</td>
-								<td>layout</td>
-							</tr>
-							<tr>
-								<td>1,010</td>
-								<td>data</td>
-								<td>rich</td>
-								<td>dashboard</td>
-								<td>tabular</td>
-							</tr>
-							<tr>
-								<td>1,011</td>
-								<td>information</td>
-								<td>placeholder</td>
-								<td>illustrative</td>
-								<td>data</td>
-							</tr>
-							<tr>
-								<td>1,012</td>
-								<td>text</td>
-								<td>placeholder</td>
-								<td>layout</td>
-								<td>dashboard</td>
-							</tr>
-							<tr>
-								<td>1,013</td>
-								<td>dashboard</td>
-								<td>irrelevant</td>
-								<td>text</td>
-								<td>visual</td>
-							</tr>
-							<tr>
-								<td>1,014</td>
-								<td>dashboard</td>
-								<td>illustrative</td>
-								<td>rich</td>
-								<td>data</td>
-							</tr>
-							<tr>
-								<td>1,015</td>
-								<td>random</td>
-								<td>tabular</td>
-								<td>information</td>
-								<td>text</td>
-							</tr>
+							<c:if test="${outList.size() > 0 }">
+								<c:forEach var="list" items="${outList }">
+									<tr id="pList${list.PRODUCNUM }"  data-value="${list.PRODUCNUM }" >
+										<td><input type='checkbox' class="pList" value="${list.PRODUCNUM }" /></td>
+										<td>${list.PRODCNAME }</td>
+										<td class="center">${list.PRODPRICE }</td>
+										<td><input type='button' onclick='updateSelected(${list.PRODUCNUM })' value='수정' /></td>
+										<td> ${list.PRREGDATE} </td>
+									</tr>
+								</c:forEach>
+							</c:if>
 						</tbody>
+						
+						<c:if test="${outList.size() eq 0 }">
+							<tr>
+								<td colspan="6">등록된 상품이 없습니다.</td>
+							</tr>
+						</c:if>
+						
 					</table>
 				</div>
 			</main>
 		</div>
 	</div>
 </body>
+<script>
+	var token = $("meta[name='_csrf']").attr("content");
+	var header = $("meta[name='_csrf_header']").attr("content");
+	
+	$(document).ajaxSend(function(e, xhr, options) {
+	    xhr.setRequestHeader(header, token);
+	});
+
+	$(function() {
+		//전체선택, 전체해제
+		$('#checkAll').on('click', function(){
+			if($('#checkAll').prop('checked') == true){
+				$('.pList').prop('checked', true);
+			}else{
+				$('.pList').prop('checked', false);
+			}
+			checkCnt();
+			
+		});
+		
+		$('.pList').on('change', function(){
+			checkCnt();
+		});
+	});
+	
+	//체크된 리스트 숫자
+	var checkCnt = function(){
+		var checkedCnt = $('.pList:checked').length;
+		if(checkedCnt == 0){
+			$('#checkCnt').text('0');
+		}else{
+			$('#checkCnt').text(checkedCnt);
+		}
+	};
+	
+	//삭제
+	var delBtn = function(){
+		
+	    var data = []; // key 값을 담을 배열
+          
+	    $('.pList:checked').each(function(){
+	    	data.push($(this).val());
+	    });
+	    
+	    var jsonData = {pNum: data};
+	    
+		$.ajax({
+			type: "post",
+			url: "/deleteList",
+			contentType: "application/json; charset=UTF-8",
+			dataType: "json",
+			data: JSON.stringify(jsonData),
+			success: function(data) {
+				window.location.href=window.location.href;
+// 				makeHtml();
+			},
+			error : function(e) {
+		        console.log("ERROR : ", e);
+		        alert("서버요청실패");
+	        }
+		
+		});
+	};
+	
+	//화면구성
+// 	var makeHtml = function(){
+		
+// 	};
+	
+	
+	function goPage(page) {
+		$("#page").val(page);
+		
+// 		$("#").attr({
+// 			"method" : "GET",
+// 			"action" : ""
+// 		}).mcpSubmit();
+	};
+	
+	
+</script>
 </html>

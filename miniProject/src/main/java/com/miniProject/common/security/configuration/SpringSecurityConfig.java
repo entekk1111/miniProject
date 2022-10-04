@@ -48,6 +48,7 @@ public class SpringSecurityConfig {
 					.failureHandler(LoginFailureHandler)
 	        .and()
 	            .logout()
+	            	.logoutUrl("/logout")
 		            .deleteCookies("JSESSIONID")
 		            .clearAuthentication(true)
 		            .invalidateHttpSession(true)
