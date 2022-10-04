@@ -32,7 +32,7 @@ public class ProductService {
 	//DB에 insert
 	@Transactional
 	public int addCheckedProduct(HttpServletRequest request) {
-		Map<String, String> map = new HashMap<String, String>();
+		Map<String, Object> map = new HashMap<String, Object>();
 		Map<String, String> optionMap = new HashMap<String, String>();
 		List<Map<String, String>> optionList = new ArrayList<Map<String, String>>();
 		
@@ -48,7 +48,7 @@ public class ProductService {
 		
 		map.put("MEMBERNUM", sessionVO.getMemberNum());					//회원번호
 		map.put("PRODCNAME", request.getParameter("productTitle"));		//상품명
-		map.put("PRODPRICE", request.getParameter("productPrice"));		//가격
+		map.put("PRODPRICE", Integer.valueOf(request.getParameter("productPrice").replaceAll("[^0-9.]", "")));		//가격
 		map.put("PRODETAIL", request.getParameter("productDetail"));	//상품상세
 		
 //		map.put("DEIOPTION", request.getParameter("DEIOPTION"));	//배송유형
@@ -68,7 +68,7 @@ public class ProductService {
 			}
 		}
 
-		productMapper.addOption(optionList);
+//		productMapper.addOption(optionList);
 		//2.옵션 인서트해야함
 		
 		return 0;

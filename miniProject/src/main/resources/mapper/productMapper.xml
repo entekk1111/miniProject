@@ -8,12 +8,12 @@
 		MEMBERNUM
 		, PRODCNAME
 		, PRODPRICE
-		, DEIOPTION
-		, DELIPRICE
-		, PKFOPRICE
-		, PRODUSALE
-		, OPTIONTIT
-		, OPTIONDET
+<!-- 		, DEIOPTION -->
+<!-- 		, DELIPRICE -->
+<!-- 		, PKFOPRICE -->
+<!-- 		, PRODUSALE -->
+<!-- 		, OPTIONTIT -->
+<!-- 		, OPTIONDET -->
 		, PRPHOTO01
 		, PRPHOTO02
 		, PRPHOTO03
@@ -26,26 +26,25 @@
 		, PRPHOTO10
 		, PRODETAIL
 		, PRREGDATE
-		, UPDATDATE
 	) VALUES (
 			#{MEMBERNUM}
 			, #{PRODCNAME}
 			, #{PRODPRICE}
-			, #{DEIOPTION}
-			, #{DELIPRICE}
-			, #{PKFOPRICE}
-			, #{PRODUSALE}
-			, #{PRPHOTO01}
-			, #{PRPHOTO02}
-			, #{PRPHOTO03}
-			, #{PRPHOTO04}
-			, #{PRPHOTO05}
-			, #{PRPHOTO06}
-			, #{PRPHOTO07}
-			, #{PRPHOTO08}
-			, #{PRPHOTO09}
-			, #{PRPHOTO10}
-			, #{PRODETAIL}
+<!-- 			, #{DEIOPTION} -->
+<!-- 			, #{DELIPRICE} -->
+<!-- 			, #{PKFOPRICE} -->
+<!-- 			, #{PRODUSALE} -->
+			, #{PRPHOTO01, jdbcType = VARCHAR}
+			, #{PRPHOTO02, jdbcType = VARCHAR}
+			, #{PRPHOTO03, jdbcType = VARCHAR}
+			, #{PRPHOTO04, jdbcType = VARCHAR}
+			, #{PRPHOTO05, jdbcType = VARCHAR}
+			, #{PRPHOTO06, jdbcType = VARCHAR}
+			, #{PRPHOTO07, jdbcType = VARCHAR}
+			, #{PRPHOTO08, jdbcType = VARCHAR}
+			, #{PRPHOTO09, jdbcType = VARCHAR}
+			, #{PRPHOTO10, jdbcType = VARCHAR}
+			, #{PRODETAIL, jdbcType = VARCHAR}
 			, NOW()
 		)
 	</insert>

@@ -12,7 +12,7 @@ public interface ProductMapper {
 	/**
 	 * 상품 업로드
 	 */
-	int addCheckedProduct(Map<String, String> map);
+	int addCheckedProduct(Map<String, Object> map);
 	
 	/**
 	 * 옵션 업로드
