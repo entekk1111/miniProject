@@ -19,6 +19,12 @@ public class ProductController {
 	
 	@Autowired
 	private ProductService productService;
+	
+	@RequestMapping(value = "/product2", method = RequestMethod.GET)
+	public String getProductInfo2() {
+		
+		return "/product/productForm2";
+	}
 
 	@RequestMapping(value = "/product", method = RequestMethod.GET)
 	public String getProductInfo() {
