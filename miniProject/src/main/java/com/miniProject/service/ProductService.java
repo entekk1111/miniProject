@@ -33,8 +33,7 @@ public class ProductService {
 	@Transactional
 	public int addCheckedProduct(HttpServletRequest request) {
 		Map<String, Object> map = new HashMap<String, Object>();
-		Map<String, String> optionMap = new HashMap<String, String>();
-		List<Map<String, String>> optionList = new ArrayList<Map<String, String>>();
+		List<Map<String, Object>> optionList = new ArrayList<Map<String, Object>>();
 		
 		SessionVO sessionVO =  (SessionVO)request.getSession().getAttribute("SID");
 		
@@ -51,25 +50,28 @@ public class ProductService {
 		map.put("PRODPRICE", Integer.valueOf(request.getParameter("productPrice").replaceAll("[^0-9.]", "")));		//가격
 		map.put("PRODETAIL", request.getParameter("productDetail"));	//상품상세
 		
-//		map.put("DEIOPTION", request.getParameter("DEIOPTION"));	//배송유형
-//		map.put("DELIPRICE", request.getParameter("DELIPRICE"));	//배송비
-//		map.put("PKFOPRICE", request.getParameter("PKFOPRICE"));	//배대지비용
-//		map.put("PRODUSALE", request.getParameter("PRODUSALE"));	//판매가 할인률
+//		map.put("DEIOPTION", request.getParameter("DEIOPTION"));		//배송유형
+//		map.put("DELIPRICE", request.getParameter("DELIPRICE"));		//배송비
+//		map.put("PKFOPRICE", request.getParameter("PKFOPRICE"));		//배대지비용
+//		map.put("PRODUSALE", request.getParameter("PRODUSALE"));		//판매가 할인률
 
-		int r = productMapper.addCheckedProduct(map);				//상품 insert
+		int r = productMapper.addCheckedProduct(map);					//상품 insert
 		//1.방금등록한 상품번호 가져와야함
+		int productNum = productMapper.getRecentProductNumber(sessionVO.getMemberNum());
+		
 		//상품옵션
 		String[] optionValues = request.getParameterValues("optionValue");
 		if(optionValues != null && optionValues.length > 0) {
 			for(String item : optionValues) {				
+				Map<String, Object> optionMap = new HashMap<String, Object>();
+				optionMap.put("PRODUCNUM", productNum);							//상품번호
 				optionMap.put("OPTIONAME", request.getParameter("optionKey"));	//상품옵션명
 				optionMap.put("OPTIVALUE", item);								//상품옵션값
 				optionList.add(optionMap);
 			}
 		}
 
-//		productMapper.addOption(optionList);
-		//2.옵션 인서트해야함
+		productMapper.addOption(optionList);
 		
 		return 0;
 	}

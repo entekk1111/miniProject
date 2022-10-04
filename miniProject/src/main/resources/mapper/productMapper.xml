@@ -49,24 +49,30 @@
 		)
 	</insert>
 	
-	<insert id="addOption" parameterType="HashMap">
+	<insert id="addOption" parameterType="List">
 	INSERT INTO product_option (
 		PRODUCNUM
 		, OPTIONAME
 		, OPTIVALUE
-		, OPTIPRICE
+<!-- 		, OPTIPRICE -->
 		, OPREGDATE
-	) VALUES (
-		 #{PRODUCNUM}
-		 , #{OPTIONAME}
-		 , #{OPTIVALUE}
-		 , #{OPTIPRICE}
-		 , #{OPREGDATE}
-	)
+	) VALUES 
+	<foreach item="item" collection="list" separator=",">
+		 (#{item.PRODUCNUM}
+		 , #{item.OPTIONAME}
+		 , #{item.OPTIVALUE}
+<!-- 		 , #{item.OPTIPRICE} -->
+		 , NOW())
+	</foreach>
 	</insert>
 	
-	<select id="getRecentProductNumber" parameterType="Map">
-	
+	<select id="getRecentProductNumber" parameterType="String" resultType="int">
+		SELECT 
+			PRODUCNUM
+		FROM product
+		WHERE MEMBERNUM = #{MEMBERNUM}
+		ORDER BY PRREGDATE DESC
+		LIMIT 1;
 	</select>
 	
 	<!-- 상품목록 조회 -->

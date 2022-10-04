@@ -250,9 +250,9 @@ var addCheckedProduct = function(){
 //옵션 상태 변경
 var changeOption = function(obj){
 	if($(obj).is(':checked')){
-		$(obj).parent().find('input[name="optionValue"]').attr('readonly', false);
+		$(obj).parent().find('input[name="optionValue"]').attr('disabled', false);
 	}else{
-		$(obj).parent().find('input[name="optionValue"]').attr('readonly', true);	
+		$(obj).parent().find('input[name="optionValue"]').attr('disabled', true);	
 	}
 };
 
@@ -337,7 +337,7 @@ var getProductInfo = function(){
 							html += '								<div class="form-check">                                                                                                                         ';
 							if(dataItem.optionValues[j].includes('품절')){	//품절이면 disabled							
 								html += '									<input type="checkbox" class="form-check-input" id="same-address_' + j + '" value="' + dataItem.optionValues[j] + '_ck' + '" onclick="changeOption(this)" disabled>                                                                           ';
-								html += '									<input type="text" class="form-control" placeholder="" name="optionValue" value="' + dataItem.optionValues[j] + '" readonly>                                                       ';
+								html += '									<input type="text" class="form-control" placeholder="" name="optionValue" value="' + dataItem.optionValues[j] + '" disabled>                                                       ';
 							}else{											
 								html += '									<input type="checkbox" class="form-check-input" id="same-address_' + j + '" value="' + dataItem.optionValues[j] + '_ck' + '" onclick="changeOption(this)" checked>                                                                           ';
 								html += '									<input type="text" class="form-control" placeholder="" name="optionValue" value="' + dataItem.optionValues[j] + '" required="">                                                       ';

@@ -15,9 +15,14 @@ public interface ProductMapper {
 	int addCheckedProduct(Map<String, Object> map);
 	
 	/**
+	 * 등록한 상품번호 가져오기
+	 */
+	int getRecentProductNumber(String memberNum);
+	
+	/**
 	 * 옵션 업로드
 	 */
-	int addOption(List<Map<String, String>> listMap);
+	int addOption(List<Map<String, Object>> listMap);
 	
 	/**
 	 * 
