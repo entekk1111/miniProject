@@ -94,6 +94,12 @@
 				<div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
 					<h1 class="h2">상품목록</h1>
 				</div>
+				<div class="searchDiv col-md-5">
+					<div class="input-group mb-3">
+						<input type="text" id="searchWord" class="form-control" value="${inData.searchWord }" placeholder="상품명 검색" />
+						<button id="search"  class="searchBtn  btn btn-outline-secondary">검색</button>
+					</div>
+				</div>
 				<div class="pt-3 pb-2 mb-3 ms-2">
 					<fmt:formatNumber value="${totalCount}" type="number" var="tCount" />	
 					<c:if test="${tCount > 10}">
@@ -105,19 +111,11 @@
 					<span id="checkCnt">0</span>
 					<span>개 선택됨</span>
 				
-					<div class="btn-toolbar mb-2 mb-md-0">
 						<div class="btn-group me-2">
 							<button type="button" class="btn btn-primary" onclick="delBtn()">
 								선택한 상품 삭제
 							</button>
 						</div>
-					</div>
-					<div class="searchDiv">
-						<div>
-							<input type="text" id="searchWord" value="${inData.searchWord }" />
-							<a href="javascript:void(0);" id="search"  class="searchBtn">검색</a>
-						</div>
-					</div>
 				</div>
 			
 				<div class="table-responsive">
@@ -125,7 +123,7 @@
 					
 						<thead>
 							<tr>
-								<th scope="col"><input type='checkbox' id='checkAll' /></th>
+								<th scope="col"><input type='checkbox' class="form-check-input" id='checkAll' /></th>
 								<th scope="col">상품명</th>
 								<th scope="col">판매가</th>
 								<th scope="col">수정</th>
@@ -137,10 +135,10 @@
 							<c:if test="${outList.size() > 0 }">
 								<c:forEach var="list" items="${outList }">
 									<tr id="pList${list.PRODUCNUM }"  data-value="${list.PRODUCNUM }" >
-										<td><input type='checkbox' class="pList" value="${list.PRODUCNUM }" /></td>
+										<td><input type='checkbox' class="pList form-check-input" value="${list.PRODUCNUM }" /></td>
 										<td>${list.PRODCNAME }</td>
 										<td class="center">${list.PRODPRICE }</td>
-										<td><input type='button' onclick='updateSelected(${list.PRODUCNUM })' value='수정' /></td>
+										<td><input type='button' class="btn btn-secondary btn-sm" onclick='updateSelected(${list.PRODUCNUM })' value='수정' /></td>
 										<td> ${list.PRREGDATE} </td>
 									</tr>
 								</c:forEach>
@@ -383,10 +381,10 @@
 		if(data.totalCount != null && data.totalCount != undefined && data.totalCount != '0'){
 			for(var i = 0; i < data.outList.length; i++){					
 				html += '<tr id="pList' + data.outList[i].PRODUCNUM + '" data-value="' + data.outList[i].PRODUCNUM +'">   															';
-				html += '	<td><input type="checkbox" class="pList" value="' + data.outList[i].PRODUCNUM + '" /></td>                                      ';
+				html += '	<td><input type="checkbox" class="pList form-check-input" value="' + data.outList[i].PRODUCNUM + '" /></td>                                      ';
 				html += '	<td>' + data.outList[i].PRODCNAME + '</td>                                                                         ';
 				html += '	<td class="center">' + data.outList[i].PRODPRICE + '</td>                                                         ';
-				html += '	<td><input type="button" onclick="updateSelected(' + data.outList[i].PRODUCNUM + ')" value="수정" /></td>           ';
+				html += '	<td><input type="button" class="btn btn-secondary btn-sm" onclick="updateSelected(' + data.outList[i].PRODUCNUM + ')" value="수정" /></td>           ';
 				html += '	<td>' + data.outList[i].PRREGDATE + '</td>                                                                         ';
 				html += '</tr>                                                                                                      ';
 			}
