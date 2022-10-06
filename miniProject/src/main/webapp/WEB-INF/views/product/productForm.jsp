@@ -369,7 +369,7 @@ var getProductInfo = function(){
 	var flag = 0;
 	
 	$('input[name="url"]').each(function(){
-		if($(this).val() == null || $(this).val() == '' || $(this).val() == undefined){
+		if($(this).val() == null || $(this).val() == '' || $(this).val() == undefined || !$(this).val().includes('https') || !$(this).val().includes('http')){
 			$(this).focus();
 			$(this).addClass('is-invalid');
 			flag++;
