@@ -14,6 +14,7 @@
 
 	<script src="/webjars/jquery/3.6.1/jquery.min.js"></script>
 	<script src="/js/bootstrap.min.js"></script>
+	<script src="/js/common.js"></script>
 
     <!-- Custom styles for this template -->
     <link href="/css/dashboard.css" rel="stylesheet">
@@ -422,7 +423,7 @@ var getProductInfo = function(){
 						html += '						<div class="row g-3">                                                                                                                                    ';
 						html += '							<div class="col-sm-10">                                                                                                                              ';
 						html += '								<label for="firstName_' + i + '" class="form-label">상품명</label>                                                                                         ';
-						html += '								<input type="text" class="form-control productTitle" id="firstName_' + i + '" placeholder="" name="productTitle" value="' + dataItem.title + '" required="">                                                      ';
+						html += '								<input type="text" class="form-control productTitle" id="firstName_' + i + '" placeholder="" name="productTitle" value="' + dataItem.title + '" required="" maxlength="100">                                                      ';
 						html += '								<div class="invalid-feedback">                                                                                                                   ';
 						html += '									상품명을 입력해주세요.                                                                                                              ';
 						html += '								</div>                                                                                                                                           ';
@@ -432,7 +433,7 @@ var getProductInfo = function(){
 						//가격
 						html += '							<div class="col-sm-10">                                                                                                                              ';
 						html += '								<label for="lastName_' + i + '" class="form-label">가격</label>                                                                                            ';
-						html += '								<input type="text" class="form-control" id="lastName_' + i + '" placeholder="" name="productPrice" value="' + dataItem.price + '" required="">                                                       ';
+						html += '								<input type="text" class="form-control inputNumberFormatComma" id="lastName_' + i + '" placeholder="" name="productPrice" value="' + dataItem.price + '" required="">                                                       ';
 						html += '								<div class="invalid-feedback">                                                                                                                   ';
 						html += '									가격을 입력해주세요.                                                                                                               ';
 						html += '								</div>                                                                                                                                           ';
@@ -443,7 +444,7 @@ var getProductInfo = function(){
 						if(dataItem.optionKey != null && dataItem.optionKey != '' && dataItem.optionKey != undefined){						
 							html += '							<div class="col-sm-10">                                                                                                                              ';
 							html += '								<label for="option_' + i + '" class="form-label">옵션명</label>                                                                                          ';
-							html += '								<input type="text" class="form-control" id="option_' + i + '" placeholder="" name="optionKey" value="' + dataItem.optionKey + '" required="">                                                       ';
+							html += '								<input type="text" class="form-control" id="option_' + i + '" placeholder="" name="optionKey" value="' + dataItem.optionKey + '" required="" maxlength="30">                                                       ';
 							html += '								<div class="invalid-feedback">                                                                                                                   ';
 							html += '									옵션명을 입력해주세요.                                                                                                                 ';
 							html += '								</div>                                                                                                                                           ';
@@ -457,7 +458,7 @@ var getProductInfo = function(){
 									html += '									<input type="text" class="form-control" placeholder="" name="optionValue" value="' + dataItem.optionValues[j] + '" disabled>                                                       ';
 								}else{											
 									html += '									<input type="checkbox" class="form-check-input" id="same-address_' + j + '" value="' + dataItem.optionValues[j] + '_ck' + '" onclick="changeOption(this)" checked>                                                                           ';
-									html += '									<input type="text" class="form-control" placeholder="" name="optionValue" value="' + dataItem.optionValues[j] + '" required="">                                                       ';
+									html += '									<input type="text" class="form-control" placeholder="" name="optionValue" value="' + dataItem.optionValues[j] + '" required="" maxlength="100">                                                       ';
 								}
 								html += '								</div>                                                                                                                                          ';							
 							}
