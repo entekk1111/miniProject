@@ -1,11 +1,28 @@
-<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
- 
+<%@ page language="java" contentType="text/html; charset=utf-8" pageEncoding="utf-8"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
+<%@ taglib uri="http://tiles.apache.org/tags-tiles" prefix="tiles" %>
+
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  	<meta charset="utf-8" />
+	<meta http-equiv="X-UA-Compatible" content="IE=Edge">
+  	<meta name="_csrf" content="${_csrf.token}">
+	<meta name="_csrf_header" content="${_csrf.headerName}">
+	<script src="/webjars/jquery/3.6.1/jquery.min.js"></script>
+	<script src="/js/bootstrap.min.js" ></script>
+	<!-- Bootstrap core CSS -->
+	<link href="/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-ttbblHVjiiDPojqapKRQ488sZO1I/ceo1w2AXALA/iYVz389m+F2EXu2Go8VClG4" crossorigin="anonymous">
+	
+  	
+</head>
+<body>
 	<form id="regiForm">
 	    <div class="container">
 	        <h1>회원가입</h1>
 	        <div class="form-group">
 	            <label for="userId">아이디</label>
-	            <input type="text" class="form-control" id="userId" name="userId" placeholder="사용자 아이디" >
+	            <input type="text" class="form-control" id="userId" name="userId" value="{{#sessionVO}}{{sessionVO.id}}{{/sessionVO}}" placeholder="사용자 아이디" >
 	        </div>
 	        <div class="form-group">
 	            <label for="userEmail">이메일</label>
@@ -91,13 +108,13 @@
 			// var formData = $('#regiForm').serialize();
 			$.ajax({
 				type: "post",
-				url: "/register",
+				url: "/register.do",
 				contentType: "application/json; charset=UTF-8",
-				dataType: "json",
+// 				dataType: "json",
 				data: JSON.stringify(formData),
 				success: function(data) {
 					console.log(data);
-					location.href="/";
+					location.href="/login";
 				},
 				error : function(e) {
 			        console.log("ERROR : ", e);
@@ -108,3 +125,4 @@
 		});
 	});
 </script>
+</body>

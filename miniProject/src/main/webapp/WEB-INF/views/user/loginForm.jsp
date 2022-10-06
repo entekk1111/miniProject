@@ -1,79 +1,113 @@
-<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
- 
-<!DOCTYPE html>
-<html>
-<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+<%@ page language="java" contentType="text/html; charset=utf-8" pageEncoding="utf-8"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
+<%@ taglib uri="http://tiles.apache.org/tags-tiles" prefix="tiles" %>
 
+<!DOCTYPE html>
+<html lang="ko">
 <head>
-	<meta charset="UTF-8">
-	<title>로그인</title>
-	<meta name="_csrf" content="${_csrf.token}">
+  	<meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="Mark Otto, Jacob Thornton, and Bootstrap contributors">
+    <meta name="generator" content="Hugo 0.104.2">
+<!-- 	<meta http-equiv="X-UA-Compatible" content="IE=Edge"> -->
+  	<meta name="_csrf" content="${_csrf.token}">
 	<meta name="_csrf_header" content="${_csrf.headerName}">
 	<script src="/webjars/jquery/3.6.1/jquery.min.js"></script>
-	<script src="/js/bootstrap.min.js"></script>
-<!-- Bootstrap core CSS -->
-	<link href="/css/bootstrap.min.css" rel="stylesheet" >
+	<script src="/js/bootstrapLogin/bootstrap.min.js" ></script>
+	<!-- Custom styles for this template -->
+    <link href="/css/signin.css" rel="stylesheet">
+	<!-- Bootstrap core CSS -->
+	<link href="/css/bootstrapLogin/bootstrap.min.css" rel="stylesheet" integrity="sha384-Zenh87qX5JnK2Jl0vWa8Ck2rdkQ2Bzep5IDxbcnCeuOxjzrPF/et3URy9Bv1WTRi" crossorigin="anonymous">
+	<link rel="canonical" href="https://getbootstrap.com/docs/5.2/examples/sign-in/">
+	<meta name="theme-color" content="#712cf9">
+	
+	<style>
+      .bd-placeholder-img {
+        font-size: 1.125rem;
+        text-anchor: middle;
+        -webkit-user-select: none;
+        -moz-user-select: none;
+        user-select: none;
+      }
+
+      @media (min-width: 768px) {
+        .bd-placeholder-img-lg {
+          font-size: 3.5rem;
+        }
+      }
+
+      .b-example-divider {
+        height: 3rem;
+        background-color: rgba(0, 0, 0, .1);
+        border: solid rgba(0, 0, 0, .15);
+        border-width: 1px 0;
+        box-shadow: inset 0 .5em 1.5em rgba(0, 0, 0, .1), inset 0 .125em .5em rgba(0, 0, 0, .15);
+      }
+
+      .b-example-vr {
+        flex-shrink: 0;
+        width: 1.5rem;
+        height: 100vh;
+      }
+
+      .bi {
+        vertical-align: -.125em;
+        fill: currentColor;
+      }
+
+      .nav-scroller {
+        position: relative;
+        z-index: 2;
+        height: 2.75rem;
+        overflow-y: hidden;
+      }
+
+      .nav-scroller .nav {
+        display: flex;
+        flex-wrap: nowrap;
+        padding-bottom: 1rem;
+        margin-top: -1px;
+        overflow-x: auto;
+        text-align: center;
+        white-space: nowrap;
+        -webkit-overflow-scrolling: touch;
+      }
+    </style>
+    
+    
+	
+  	
 </head>
-<body>
-	<div class="container">
-	    <form class="px-4 py-3" action="/loginProc" method="post">
-<%-- 	        <div th:if="${param.error}"> --%>
-<!-- 	            <div class="alert alert-danger"> -->
-<!-- 	                사용자ID 또는 비밀번호를 확인해 주세요. -->
-<!-- 	            </div> -->
-<!-- 	        </div> -->
-	        <div class="mb-3">
-	            <label for="username" class="form-label">사용자ID</label>
-	            <input type="text" name="username" id="username" class="form-control">
-	        </div>
-	        <div class="mb-3">
-	            <label for="password" class="form-label">비밀번호</label>
-	            <input type="password" name="password" id="password" class="form-control">
-	        </div>
-	        <button type="submit" class="btn btn-primary">로그인</button>
-	    </form>
-	    <a href="/signUp">회원가입</a>
-	</div>
+
+ <body class="text-center">
+   
+	<main class="form-signin w-100 m-auto">
+		<form action="/loginProc" method="post">
+			<img class="mb-4" src="/docs/5.2/assets/brand/bootstrap-logo.svg" alt="" width="72" height="57">
+			<h1 class="h3 mb-3 fw-normal">Login</h1>
+			
+			<div class="form-floating">
+				<input type="text" class="form-control" id="floatingInput" name="username" placeholder="name@example.com">
+				<label for="floatingInput">사용자ID</label>
+			</div>
+			<div class="form-floating">
+				<input type="password" class="form-control" id="floatingPassword" name="password" placeholder="Password">
+				<label for="floatingPassword">비밀번호</label>
+			</div>
+			
+			<div class="checkbox mb-3">
+				<label>
+					 <p ><a class="float-right"  href="/signUp">회원가입</a></p>
+				</label>
+			</div>
+			<button class="w-100 btn btn-lg btn-primary" type="submit">로그인</button>
+	<!-- 			<p class="mt-5 mb-3 text-muted">&copy; 2017–2022</p> -->
+		</form>
+	</main>
+
+
+   
 </body>
 
-<script type="text/javascript">
-	var token = $("meta[name='_csrf']").attr("content");
-	var header = $("meta[name='_csrf_header']").attr("content");
-	
-	$(document).ajaxSend(function(e, xhr, options) {
-	    xhr.setRequestHeader(header, token);
-	});
-	
-	$(function() {
-		
-		//가입버튼
-		$("#register").on("click", function() {
-			
-			var formData = {
-				userId : $('#userId').val(),
-				userEmail : $('#userEmail').val(),
-				userPw : $('#userPw').val(),
-				gender : $("input:radio[name='gender']:checked").val(),
-				age: $("input:radio[name='age']:checked").val()
-			}
-			// var formData = $('#regiForm').serialize();
-			$.ajax({
-				type: "post",
-				url: "/register",
-				contentType: "application/json; charset=UTF-8",
-				dataType: "json",
-				data: JSON.stringify(formData),
-				success: function(data) {
-					console.log(data);
-					location.href="/";
-				},
-				error : function(e) {
-			        console.log("ERROR : ", e);
-			        alert("서버요청실패");
-		        }
-			
-			});
-		});
-	});
-</script>
 </html>

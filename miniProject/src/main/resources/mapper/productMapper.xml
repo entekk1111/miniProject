@@ -75,46 +75,4 @@
 		LIMIT 1;
 	</select>
 	
-	<!-- 상품목록 조회 -->
-	<select id="getProductList" resultType="Map">
-		SELECT 
-			PRODUCNUM
-			, PRODCNAME
-			, PRODPRICE
-			, PRREGDATE
-		FROM product
-		WHERE MEMBERNUM = #{memberNum}
-		ORDER BY PRREGDATE DESC
-	</select>
-	
-	<!-- 상품목록 총갯수 조회 -->
-	<select id="getTotalCount" resultType="int">
-		SELECT
-			COUNT(*)
-		FROM
-			product
-		WHERE MEMBERNUM = #{memberNum}
-			<choose>
-				<when test="null != searchType and 'mgtUsrIdn' == searchType and null != searchWord">
-					AND LOWER(MGTUSRIDN) LIKE LOWER(CONCAT('%', #{searchWord }, '%'))
-				</when>
-				<when test="null != searchType and 'mgtUsrNam' == searchType and null != searchWord">
-					AND LOWER(MGTUSRNAM) LIKE LOWER(CONCAT('%', #{searchWord }, '%'))
-				</when>
-			</choose>
-	</select>
-	
-	<delete id="deleteProduct" parameterType="Map">
-		DELETE
-			FROM product
-     	WHERE MEMBERNUM = #{memberNum}
-     		AND PRODUCNUM in
-     		<foreach collection="pNum" item="item" index="index" open="(" separator="," close=")">
-			   	#{item }
-			</foreach>
-   			
-	</delete>
-	
-	
-	
 </mapper>

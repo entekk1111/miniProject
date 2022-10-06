@@ -23,7 +23,7 @@ public class TilesConfiguration {
 	public ViewResolver viewResolver() {
 		UrlBasedViewResolver resolver = new UrlBasedViewResolver();
 		resolver.setViewClass(TilesView.class);
-		resolver.setOrder(1);
+		resolver.setOrder(3);
 		
 		return resolver;
 		
