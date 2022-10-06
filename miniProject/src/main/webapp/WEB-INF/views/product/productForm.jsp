@@ -115,6 +115,18 @@
 					URL수집하기
 				</button>
 	        </div>
+			
+			<!-- 상품이 전부 업로드 되었을때 -->
+			<div id="uploadSucceseMsg" class="p-5 bg-light border rounded-3 d-none">
+				<h2>상품이 모두 업로드 되었습니다.</h2>
+				<p><span class="text-primary">상품목록</span>에서 확인 할 수 있습니다.</p>
+				<button type="button" class="btn btn-outline-primary" data-bs-toggle="modal" data-bs-target="#urlOpenModal">
+					URL수집하기
+				</button>
+				<button type="button" class="btn btn-outline-primary" onclick="goProductList()">
+					상품목록가기
+				</button>
+	        </div>
 	        
 	        <!-- 상품 전송 폼 -->
 			<form id="submitForm" name="submitForm">
@@ -131,7 +143,8 @@
 		<div class="modal-content">
 			<div class="modal-header">
 				<h5 class="modal-title me-2" id="urlOpenModalLabel">URL로 상품수집</h5>
-				<button type="button" class="btn btn-primary btn-sm" onclick="addUrl()">URL입력창 추가</button>
+				<button type="button" class="btn btn-primary btn-sm me-2" onclick="addUrl()">URL입력창 추가</button>
+				<button type="button" class="btn btn-secondary btn-sm" onclick="resetUrlForm()">URL입력창 초기화</button>
 				<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
 			</div>
 			<div class="modal-body">
@@ -172,11 +185,38 @@ $(document).ready(function() {
 	$('#urlOpenModal').on('shown.bs.modal', function(){
 		$('input[name="url"]').focus();
 	});
+	
 
 });
 
+$(document).on('keyup', 'input', function(){
+	if($(this).val() != null && $(this).val() != '' && $(this).val() != undefined){
+		$(this).removeClass('is-invalid')
+	}	
+});
+
+//상품목록가기
+var goProductList = function(){
+	location.href = "/productList";
+};
+
+//url상품수집 모달 초기화
+var resetUrlForm = function(){
+	var inputBox = $('#urlForm').find('.input-group');
+	for(var i = 1; i < $(inputBox).length; i++){
+		$(inputBox)[i].remove();
+	}
+	$('input[name="url"]').val('');
+};
+
+//url추가 폼 삭제
+var delInputUrl = function(obj){
+	$(obj).parent().remove();
+};
+
 //선택된 갯수 체크
 var checkedCount = function(){
+	$('#prCount').text($('.product').length);
 	$('#prCheckedCount').text($('.prCheck:checked').length);
 };
 
@@ -189,11 +229,6 @@ var summernote = function(){
 		focus : true,
 		lang : 'ko-KR'
 	});
-};
-
-//url추가 폼 삭제
-var delInputUrl = function(obj){
-	$(obj).parent().remove();
 };
 
 //url추가
@@ -237,32 +272,33 @@ var allCheck = function(){
 //상품 업로드
 var addCheckedProduct = function(){
 	var data = '';
+	var flag = 0;
 
 	if($('.prCheck:checked').length == 0){
 		alert('최소 한가지는 선택해야 합니다.');
 		return false;
 	}
 	
-// 	$('.prCheck').each(function(){
-// 		//체크 안되어있는것 disabled 처리
-// 		if(!$(this).is(':checked')){
-// 			var index = $(this).data('index');
-// 			$('.product_' + index).find('input').attr('disabled', true);
-// 		}
-// 	});
-// 	data = $('#submitForm').serialize();
-	
 	//1. 체크되어있는거 data-index 가져옴
-	//2. product_ + index div 하위에 있는 input 값을 가져옴 disabled 아닌 것들만
+	//2. product_ + index div 하위에 있는 disabled 아닌 것들만 input 값을 가져옴
 	var dataArr = [];
+	var indexArr = [];
 	for(var item of $('.prCheck:checked')){
 		var dataObj = {};
 		var index = $(item).data('index');
-		
+		indexArr.push($('.product_' + index));
+	
 		var inputItem = $('.product_' + index).find('input:not([disabled]), textarea');
 		for(var itemInfo of inputItem){
 			if($(itemInfo).attr('name') != 'optionValue' || $(itemInfo).attr('name') != 'productPhoto'){				
-				dataObj[$(itemInfo).attr('name')] = $(itemInfo).val();
+				if(($(itemInfo).val() == null || $(itemInfo).val() == '' || $(itemInfo).val() == undefined) && $(itemInfo).attr('name') != 'productDetail' && !$(itemInfo).hasClass('note-codable') && !$(itemInfo).hasClass('note-input')){
+					$(itemInfo).addClass('is-invalid');
+					$(itemInfo).focus();
+					flag++;
+					return;
+				}else{					
+					dataObj[$(itemInfo).attr('name')] = $(itemInfo).val();
+				}
 			}
 		}
 		
@@ -281,19 +317,33 @@ var addCheckedProduct = function(){
 		dataObj['productPhoto'] = photoArr;
 		dataArr.push(dataObj);
 	}
-	console.log(dataArr);
 	
-	$.ajax({
-		type: "post",
-		url:"/addCheckedProduct",
-		contentType: 'application/json',
-		data: JSON.stringify(dataArr),
-		success : function(data){
-			alert('업로드완료');
-		},
-		error : function(fail){
-		}
-	});
+	if(flag == 0){
+		$.ajax({
+			type: "post",
+			url:"/addCheckedProduct",
+			contentType: 'application/json',
+			data: JSON.stringify(dataArr),
+			success : function(data){
+				if(data != 0){
+					alert('업로드 완료');
+					for(var item of indexArr){
+						item.remove();			//업로드한 상품 화면에서 삭제
+					}
+					if($('.product').length == 0){						//다 올렸을때
+						$('#uploadSucceseMsg').removeClass('d-none');	//안내문구 노출
+					}
+					checkedCount();	//상품 갯수 다시 셈
+					resetUrlForm(); //url 상품수집 모달 초기화
+				}else{
+					alert('업로드 불가');
+				}
+			},
+			error : function(fail){
+				alert('업로드에 실패했습니다. 관리자에게 문의해주세요.');
+			}
+		});
+	}
 	
 	$('.prCheck').each(function(){
 		//체크 안되어있는것 disabled 처리
@@ -316,147 +366,169 @@ var changeOption = function(obj){
 //상품 정보 가져오기
 var getProductInfo = function(){
 	var urlArr = [];
-	$('input[name="url"]').each(function(){
-		urlArr.push($(this).val());
-	});
+	var flag = 0;
 	
-	$.ajax({
-		type: "post",
-		url:"/getProduct",
-		data: JSON.stringify(urlArr),
-		contentType: 'application/json',
-		success : function(data){
-			var html = '';                                                           
-			if(data != null && data != undefined && data != ''){
-				for(var i = 0; i < data.length; i++){					
-					var dataItem = data[i];
-					
-					html += '<div class="product_' + i + ' mt-4 product">   																																			 ';
-					html += '	<ul class="nav nav-tabs accordion">                                                                                                                                          ';
-					html += '		<li class="nav-item">                                                                                                                                                    ';
-					html += '			<input type="checkbox" class="mx-3 mt-2 form-check-input prCheck" data-index="' + i + '" onclick="checkedCount()" checked>                                                                                                   ';
-					html += '		</li>                                                                                                                                                                    ';
-					html += '		<li class="nav-item">                                                                                                                                                    ';
-					html += '			<a class="nav-link active aTab_' + i + '" href="javascript:void(0)" onclick="changeTab(\'A\', ' + i + ')">기본정보</a>                                                                 ';
-					html += '		</li>                                                                                                                                                                    ';
-					html += '		<li class="nav-item">                                                                                                                                                    ';
-					html += '			<a class="nav-link bTab_' + i + '" href="javascript:void(0)" onclick="changeTab(\'B\', ' + i + ')">상세페이지</a>                                                                      ';
-					html += '		</li>                                                                                                                                                                    ';
-// 					html += '		<li class="content-end">                                                                                                                                                 ';
-// 					html += '			<button type="button" class="btn btn-primary" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">';
-// 					html += '				접기                                                                                                                                                             ';
-// 					html += '			</button>                                                                                                                                                            ';
-// 					html += '		</li>                                                                                                                                                                    ';
-					html += '	</ul>                                                                                                                                                                        ';
-	                html += '                                                                                                                                                                                ';
-	                html += '                                                                                                                                                                                ';
-					html += '	<div class="accordion-item">                                                                                                                                                 ';
-					html += '		<div id="collapseOne" class="accordion-collapse collapse show" aria-labelledby="headingOne" data-bs-parent="#accordionExample">                                          ';
-					html += '			<div class="accordion-body">                                                                                                                                         ';
-					html += '				<div class="h-100 p-5 bg-light border rounded-3">                                                                                                                ';
-					html += '		                                                                                                                                                                         ';
-					html += '					<!-- 상품 정보 -->                                                                                                                                           ';
-					html += '					<div id="productInfo" class="col-md-7 col-lg-8 aTabCard_' + i + '">                                                                                                  ';
-					
-					//상품명
-					html += '						<div class="row g-3">                                                                                                                                    ';
-					html += '							<div class="col-sm-12">                                                                                                                              ';
-					html += '								<label for="firstName_' + i + '" class="form-label">상품명</label>                                                                                         ';
-					html += '								<input type="text" class="form-control productTitle" id="firstName_' + i + '" placeholder="" name="productTitle" value="' + dataItem.title + '" required="">                                                      ';
-					html += '								<div class="invalid-feedback">                                                                                                                   ';
-					html += '									Valid first name is required.                                                                                                                ';
-					html += '								</div>                                                                                                                                           ';
-					html += '							</div>                                                                                                                                               ';
-					html += '						                                                                                                                                                         ';
-					
-					//가격
-					html += '							<div class="col-sm-12">                                                                                                                              ';
-					html += '								<label for="lastName_' + i + '" class="form-label">가격</label>                                                                                            ';
-					html += '								<input type="text" class="form-control" id="lastName_' + i + '" placeholder="" name="productPrice" value="' + dataItem.price + '" required="">                                                       ';
-					html += '								<div class="invalid-feedback">                                                                                                                   ';
-					html += '									Valid last name is required.                                                                                                                 ';
-					html += '								</div>                                                                                                                                           ';
-					html += '							</div>                                                                                                                                               ';
-					html += '						                                                                                                                                                         ';
-					
-					//옵션
-					if(dataItem.optionKey != null && dataItem.optionKey != '' && dataItem.optionKey != undefined){						
-						html += '							<div class="col-sm-12">                                                                                                                              ';
-						html += '								<label for="option_' + i + '" class="form-label">옵션명</label>                                                                                          ';
-						html += '								<input type="text" class="form-control" id="option_' + i + '" placeholder="" name="optionKey" value="' + dataItem.optionKey + '" required="">                                                       ';
-						html += '								<div class="invalid-feedback">                                                                                                                   ';
-						html += '									Valid last name is required.                                                                                                                 ';
-						html += '								</div>                                                                                                                                           ';
-						html += '							</div>                                                                                                                                               ';
-					    html += '							<div class="col-sm-12">                                                                                                                              ';
-						//옵션값
-					    for(var j = 0; j < dataItem.optionValues.length; j++){	
-							html += '								<div class="form-check">                                                                                                                         ';
-							if(dataItem.optionValues[j].includes('품절')){	//품절이면 disabled							
-								html += '									<input type="checkbox" class="form-check-input" id="same-address_' + j + '" value="' + dataItem.optionValues[j] + '_ck' + '" onclick="changeOption(this)" disabled>                                                                           ';
-								html += '									<input type="text" class="form-control" placeholder="" name="optionValue" value="' + dataItem.optionValues[j] + '" disabled>                                                       ';
-							}else{											
-								html += '									<input type="checkbox" class="form-check-input" id="same-address_' + j + '" value="' + dataItem.optionValues[j] + '_ck' + '" onclick="changeOption(this)" checked>                                                                           ';
-								html += '									<input type="text" class="form-control" placeholder="" name="optionValue" value="' + dataItem.optionValues[j] + '" required="">                                                       ';
-							}
-							html += '								</div>                                                                                                                                          ';							
-						}
-						html += '							</div>                                                                                                                                               ';
-					}else{
-// 						html += '<div class="col-sm-12">'
-// 						html += '<button type="button">옵션 추가</button>'
-// 						html += '</div>                                                                                                                                                   ';
-					}
-					html += '						</div>                                                                                                                                                   ';
-					html += '						                                                                                                                                                         ';
-					html += '						<hr class="my-4">                                                                                                                                        ';
-					html += '						                                                                                                                                                         ';
-					
-					//사진
-					if(dataItem.photos != null && dataItem.photos != '' && dataItem.photos != undefined){						
-						html += '						<h4 class="mb-3">사진(최대 10개)</h4>                                                                                                                               ';
-						html += '						<div class="row row-cols-1 row-cols-md-3 g-4">                                                                                                           ';
-						for(var z = 0; z < dataItem.photos.length; z++){							
-						html += '							<div class="col photo_' + i + '_' + z + '">                                                                                                                          ';
-						html += '								<div class="card text-end">                                                                                                                      ';
-						html += '									<div class="card-body">                                                                                                                      ';
-						html += '										<button type="button" class="btn btn-secondary" onclick="delPhoto(' + i + ',' + z + ')"><i class="fa-solid fa-x"></i></button>                           ';
-						html += '										<img src="' + dataItem.photos[z] + '" class="card-img-top" alt="...">                                    ';						
-						html += '										<input type="hidden" name="productPhoto" value="' + dataItem.photos[z] + '">                                                                                                                                       ';
-						html += '									</div>                                                                                                                                       ';
-						html += '								</div>                                                                                                                                           ';
-						html += '							</div>                                                                                                                                               ';
-						}
-						html += '						</div>                                                                                                                                                   ';
-					}
-					html += '					</div>                                                                                                                                                       ';
-					html += '					                                                                                                                                                             ';
-					
-					//상세페이지
-					html += '					<!-- 상품 상세 -->                                                                                                                                           ';
-					html += '					<div id="productDetail" class="form-floating bTabCard_' + i + ' d-none">                                                                                             ';
-					html += '						<textarea contenteditable="true" class="form-control editable summernote" name="productDetail" placeholder="Leave a comment here" style="height: 100px">' + data[0].details + '</textarea>      ';
-					html += '					</div>                                                                                                                                                       ';
-				    html += '   		 		</div>                                                                                                                                                       ';
-					html += '			</div>                                                                                                                                                               ';
-					html += '		</div>                                                                                                                                                                   ';
-					html += '	</div>                                                                                                                                                                       ';
-					html += '</div>                                                                                                                                                                          ';
-				}
-			}
-			
-			$('#productCard').html(html);			//상품 정보 넣기
-			$('#allCheck').attr('checked', true);					//전체체크로 
-			$('#prCount, #prCheckedCount').text(data.length);		//불러온 상품 갯수
-			$('#urlOpenModal').modal('hide');		//url 오픈 모달 숨김
-			$('#guidanceMsg').addClass('d-none');	//가이드문구 숨김
-			$('#submitForm').removeClass('d-none');	//상품정보 노출
-			$('#submitBtn').removeAttr('disabled');	//선택한 상품 업로드 버튼 풀기
-			summernote(); 							//써머노트 적용
-		},
-		error : function(fail){
+	$('input[name="url"]').each(function(){
+		if($(this).val() == null || $(this).val() == '' || $(this).val() == undefined){
+			$(this).focus();
+			$(this).addClass('is-invalid');
+			flag++;
+			return;
+		}else{
+			urlArr.push($(this).val());			
 		}
 	});
+	
+	if(flag == 0){	
+		$.ajax({
+			type: "post",
+			url:"/getProduct",
+			data: JSON.stringify(urlArr),
+			contentType: 'application/json',
+			success : function(data){
+				var html = '';                                                           
+				if(data != null && data != undefined && data != ''){
+					for(var i = 0; i < data.length; i++){					
+						var dataItem = data[i];
+						
+						html += '<div class="product_' + i + ' mt-4 product">   																																			 ';
+						html += '	<ul class="nav nav-tabs accordion">                                                                                                                                          ';
+						html += '		<li class="nav-item">                                                                                                                                                    ';
+						html += '			<input type="checkbox" class="mx-3 mt-2 form-check-input prCheck" data-index="' + i + '" onclick="checkedCount()" checked>                                                                                                   ';
+						html += '		</li>                                                                                                                                                                    ';
+						html += '		<li class="nav-item">                                                                                                                                                    ';
+						html += '			<a class="nav-link active aTab_' + i + '" href="javascript:void(0)" onclick="changeTab(\'A\', ' + i + ')">기본정보</a>                                                                 ';
+						html += '		</li>                                                                                                                                                                    ';
+						html += '		<li class="nav-item">                                                                                                                                                    ';
+						html += '			<a class="nav-link bTab_' + i + '" href="javascript:void(0)" onclick="changeTab(\'B\', ' + i + ')">상세페이지</a>                                                                      ';
+						html += '		</li>                                                                                                                                                                    ';
+	// 					html += '		<li class="content-end">                                                                                                                                                 ';
+	// 					html += '			<button type="button" class="btn btn-primary" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">';
+	// 					html += '				접기                                                                                                                                                             ';
+	// 					html += '			</button>                                                                                                                                                            ';
+	// 					html += '		</li>                                                                                                                                                                    ';
+						html += '	</ul>                                                                                                                                                                        ';
+		                html += '                                                                                                                                                                                ';
+		                html += '                                                                                                                                                                                ';
+						html += '	<div class="accordion-item">                                                                                                                                                 ';
+						html += '		<div id="collapseOne" class="accordion-collapse collapse show" aria-labelledby="headingOne" data-bs-parent="#accordionExample">                                          ';
+						html += '			<div class="accordion-body">                                                                                                                                         ';
+						html += '				<div class="h-100 p-5 bg-light border rounded-3">                                                                                                                ';
+						html += '		                                                                                                                                                                         ';
+						html += '					<!-- 상품 정보 -->                                                                                                                                           ';
+						html += '					<div id="productInfo" class="col-md-7 col-lg-8 aTabCard_' + i + '">                                                                                                  ';
+						
+						//상품명
+						html += '						<div class="row g-3">                                                                                                                                    ';
+						html += '							<div class="col-sm-10">                                                                                                                              ';
+						html += '								<label for="firstName_' + i + '" class="form-label">상품명</label>                                                                                         ';
+						html += '								<input type="text" class="form-control productTitle" id="firstName_' + i + '" placeholder="" name="productTitle" value="' + dataItem.title + '" required="">                                                      ';
+						html += '								<div class="invalid-feedback">                                                                                                                   ';
+						html += '									상품명을 입력해주세요.                                                                                                              ';
+						html += '								</div>                                                                                                                                           ';
+						html += '							</div>                                                                                                                                               ';
+						html += '						                                                                                                                                                         ';
+						
+						//가격
+						html += '							<div class="col-sm-10">                                                                                                                              ';
+						html += '								<label for="lastName_' + i + '" class="form-label">가격</label>                                                                                            ';
+						html += '								<input type="text" class="form-control" id="lastName_' + i + '" placeholder="" name="productPrice" value="' + dataItem.price + '" required="">                                                       ';
+						html += '								<div class="invalid-feedback">                                                                                                                   ';
+						html += '									가격을 입력해주세요.                                                                                                               ';
+						html += '								</div>                                                                                                                                           ';
+						html += '							</div>                                                                                                                                               ';
+						html += '						                                                                                                                                                         ';
+						
+						//옵션
+						if(dataItem.optionKey != null && dataItem.optionKey != '' && dataItem.optionKey != undefined){						
+							html += '							<div class="col-sm-10">                                                                                                                              ';
+							html += '								<label for="option_' + i + '" class="form-label">옵션명</label>                                                                                          ';
+							html += '								<input type="text" class="form-control" id="option_' + i + '" placeholder="" name="optionKey" value="' + dataItem.optionKey + '" required="">                                                       ';
+							html += '								<div class="invalid-feedback">                                                                                                                   ';
+							html += '									옵션명을 입력해주세요.                                                                                                                 ';
+							html += '								</div>                                                                                                                                           ';
+							html += '							</div>                                                                                                                                               ';
+						    html += '							<div class="col-sm-10">                                                                                                                              ';
+							//옵션값
+						    for(var j = 0; j < dataItem.optionValues.length; j++){	
+								html += '								<div class="form-check">                                                                                                                         ';
+								if(dataItem.optionValues[j].includes('품절')){	//품절이면 disabled							
+									html += '									<input type="checkbox" class="form-check-input" id="same-address_' + j + '" value="' + dataItem.optionValues[j] + '_ck' + '" onclick="changeOption(this)" disabled>                                                                           ';
+									html += '									<input type="text" class="form-control" placeholder="" name="optionValue" value="' + dataItem.optionValues[j] + '" disabled>                                                       ';
+								}else{											
+									html += '									<input type="checkbox" class="form-check-input" id="same-address_' + j + '" value="' + dataItem.optionValues[j] + '_ck' + '" onclick="changeOption(this)" checked>                                                                           ';
+									html += '									<input type="text" class="form-control" placeholder="" name="optionValue" value="' + dataItem.optionValues[j] + '" required="">                                                       ';
+								}
+								html += '								</div>                                                                                                                                          ';							
+							}
+							html += '							</div>                                                                                                                                               ';
+						}else{
+	// 						html += '<div class="col-sm-12">'
+	// 						html += '<button type="button">옵션 추가</button>'
+	// 						html += '</div>                                                                                                                                                   ';
+						}
+						html += '						</div>                                                                                                                                                   ';
+						html += '						                                                                                                                                                         ';
+						html += '						<hr class="my-4">                                                                                                                                        ';
+						html += '						                                                                                                                                                         ';
+						
+						//사진
+						if(dataItem.photos != null && dataItem.photos != '' && dataItem.photos != undefined){						
+							html += '						<h4 class="mb-3">사진(최대 10개)</h4>                                                                                                                               ';
+							html += '						<div class="row row-cols-1 row-cols-md-3 g-4">                                                                                                           ';
+							for(var z = 0; z < dataItem.photos.length; z++){							
+							html += '							<div class="col photo_' + i + '_' + z + '">                                                                                                                          ';
+							html += '								<div class="card text-end"	>                                                                                                                      ';
+							html += '									<div class="card-body">                                                                                                                      ';
+							html += '										<button type="button" class="btn btn-secondary" onclick="delPhoto(' + i + ',' + z + ')"><i class="fa-solid fa-x"></i></button>                           ';
+							html += '										<img src="' + dataItem.photos[z] + '" class="card-img-top">                                    ';						
+							html += '										<input type="hidden" name="productPhoto" value="' + dataItem.photos[z] + '">                                                                                                                                       ';
+							html += '									</div>                                                                                                                                       ';
+							html += '								</div>                                                                                                                                           ';
+							html += '							</div>                                                                                                                                               ';
+							}
+							html += '						</div>                                                                                                                                                   ';
+						}
+						html += '					</div>                                                                                                                                                       ';
+						html += '					                                                                                                                                                             ';
+						
+						//상세페이지
+						html += '					<!-- 상품 상세 -->                                                                                                                                           ';
+						html += '					<div id="productDetail" class="form-floating bTabCard_' + i + ' d-none">                                                                                             ';
+						html += '						<textarea contenteditable="true" class="form-control editable summernote" name="productDetail" placeholder="Leave a comment here" style="height: 100px">' + data[0].details.replaceAll('css','') + '</textarea>      ';
+						html += '					</div>                                                                                                                                                       ';
+					    html += '   		 		</div>                                                                                                                                                       ';
+						html += '			</div>                                                                                                                                                               ';
+						html += '		</div>                                                                                                                                                                   ';
+						html += '	</div>                                                                                                                                                                       ';
+						html += '</div>                                                                                                                                                                          ';
+					}
+					
+				html += '	<div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom"> ';
+				html += '	<div class="">                                                                                                        ';
+				html += '		<div class="btn-grou">                                                                                            ';
+				html += '			<button type="button" id="submitBtn" class="btn btn-primary" onclick="addCheckedProduct()">                   ';
+				html += '				선택한 상품 업로드                                                                                        ';
+				html += '			</button>                                                                                                     ';
+				html += '		</div>                                                                                                            ';
+				html += '	</div>                                                                                                                ';
+				html += '</div>                                                                                                                   ';
+					
+					$('#productCard').html(html);			//상품 정보 넣기
+					$('#allCheck').attr('checked', true);					//전체체크로 
+					$('#prCount, #prCheckedCount').text(data.length);		//불러온 상품 갯수
+					$('#urlOpenModal').modal('hide');		//url 오픈 모달 숨김
+					$('#guidanceMsg, #uploadSucceseMsg').addClass('d-none');	//가이드문구 숨김
+					$('#submitForm').removeClass('d-none');	//상품정보 노출
+					$('#submitBtn').removeAttr('disabled');	//선택한 상품 업로드 버튼 풀기
+					summernote(); 							//써머노트 적용
+				}
+				
+			},
+			error : function(fail){
+			}
+		});
+	}
 };
 </script>
 </html>

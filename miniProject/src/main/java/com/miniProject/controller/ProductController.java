@@ -44,11 +44,9 @@ public class ProductController {
 	//상품 insert
 	@RequestMapping(value = "/addCheckedProduct", method = RequestMethod.POST)
 	@ResponseBody
-	public String addCheckedProduct(HttpServletRequest request, @RequestBody List<Map<String, Object>> param) {
+	public int addCheckedProduct(HttpServletRequest request, @RequestBody List<Map<String, Object>> param) {
 		
-		productService.addCheckedProduct(request, param);
-		
-		return "";
+		return productService.addCheckedProduct(request, param);
 	}
 	
 }

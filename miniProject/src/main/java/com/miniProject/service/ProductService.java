@@ -31,9 +31,9 @@ public class ProductService {
 	}
 	
 	//DB에 insert
-//	@Transactional
+	@Transactional
 	public int addCheckedProduct(HttpServletRequest request, List<Map<String, Object>> param) {
-		
+		int r = 0;
 		SessionVO sessionVO =  (SessionVO)request.getSession().getAttribute("SID");
 		
 		for(int i = 0; i < param.size(); i++) {
@@ -56,7 +56,7 @@ public class ProductService {
 				}
 			}
 			
-			int r = productMapper.addCheckedProduct(map);					//상품 insert
+			r = productMapper.addCheckedProduct(map);					//상품 insert
 			//1.방금등록한 상품번호 가져옴
 			int productNum = productMapper.getRecentProductNumber(sessionVO.getMemberNum());
 			
@@ -72,7 +72,6 @@ public class ProductService {
 					optionList.add(optionMap);
 				}
 				int e = productMapper.addOption(optionList);
-				System.out.println(e);
 			}
 			
 		}
@@ -82,6 +81,6 @@ public class ProductService {
 //		map.put("PKFOPRICE", request.getParameter("PKFOPRICE"));		//배대지비용
 //		map.put("PRODUSALE", request.getParameter("PRODUSALE"));		//판매가 할인률
 		
-		return 0;
+		return r;
 	}
 }
