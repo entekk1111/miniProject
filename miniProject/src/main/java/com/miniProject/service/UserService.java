@@ -8,6 +8,8 @@ import javax.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.validation.Errors;
+import org.springframework.validation.FieldError;
 
 import com.miniProject.mapper.UserMapper;
 
@@ -32,4 +34,15 @@ public class UserService {
     	int result = userMapper.userSave(map);                								     // insert
         return result;
     }
+    
+    /* 회원가입 시, 유효성 체크 */    
+//    public Map<String, String> validateHandling(Errors errors) {
+//    	Map<String, String> validatorResult = new HashMap<>();         
+//    	for (FieldError error : errors.getFieldErrors()) {            
+//    		String validKeyName = String.format("valid_%s", error.getField());            
+//    		validatorResult.put(validKeyName, error.getDefaultMessage());        
+//    		}        
+//    	return validatorResult;
+//    }
+    	
 }

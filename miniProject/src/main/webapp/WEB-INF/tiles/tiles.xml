@@ -14,17 +14,17 @@
 		<put-attribute name="footer" value="" />
 	</definition>
 	<!-- LOGIN -->
-	<definition name="layout-login" template="/WEB-INF/tiles/layouts/layout_default_login.jsp">
-		<put-attribute name="title" value="MINIPROJECT" />
-		<put-attribute name="body" value="" />
-	</definition>
+<!-- 	<definition name="layout-login" template="/WEB-INF/tiles/layouts/layout_default_login.jsp"> -->
+<!-- 		<put-attribute name="title" value="MINIPROJECT" /> -->
+<!-- 		<put-attribute name="body" value="" /> -->
+<!-- 	</definition> -->
 	
 	
 	<!-- Layout mapping  -->
 	<!-- LOGIN -->
-	<definition name="/user/*" extends="layout-login">
-		<put-attribute name="body" value="/WEB-INF/views/user/{1}.jsp" />
-	</definition>
+<!-- 	<definition name="/user/*" extends="layout-login"> -->
+<!-- 		<put-attribute name="body" value="/WEB-INF/views/user/{1}.jsp" /> -->
+<!-- 	</definition> -->
 	
 	<!-- MAIN_DEFAULT (프로덕트관련) tils>layouts 폴더에서 layout_dafault.jsp 설정대로 gnb, header body 부분 나눠주시면 됩니다.--> 
 <!-- 	<definition name="/product/*" extends="layout-normal"> -->

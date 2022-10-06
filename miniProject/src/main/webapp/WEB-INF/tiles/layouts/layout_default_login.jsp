@@ -10,14 +10,11 @@
   	<meta name="_csrf" content="${_csrf.token}">
 	<meta name="_csrf_header" content="${_csrf.headerName}">
 	<script src="/webjars/jquery/3.6.1/jquery.min.js"></script>
-	
-    <!-- Custom styles for this template -->
-    <link href="/css/dashboard.css" rel="stylesheet">
-    <link rel="canonical" href="https://getbootstrap.com/docs/5.1/examples/dashboard/">
-
-    <!-- Bootstrap core CSS -->
+	<script src="/js/bootstrap.min.js"></script>
+	<!-- Bootstrap core CSS -->
 	<link href="/css/bootstrap.min.css" rel="stylesheet" >
 	
+  	
 </head>
 
 <body>

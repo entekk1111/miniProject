@@ -1,6 +1,8 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
+
 <!DOCTYPE html>
 <html>
 <head>
@@ -13,6 +15,9 @@
     <meta name="author" content="Mark Otto, Jacob Thornton, and Bootstrap contributors">
     <meta name="generator" content="Hugo 0.88.1">
     <title>상품목록</title>
+    
+    <script src="/webjars/jquery/3.6.1/jquery.min.js"></script>
+	<script src="/js/bootstrap.min.js"></script>
 
     <!-- Custom styles for this template -->
     <link href="/css/dashboard.css" rel="stylesheet">
@@ -43,11 +48,14 @@
 		<button class="navbar-toggler position-absolute d-md-none collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#sidebarMenu" aria-controls="sidebarMenu" aria-expanded="false" aria-label="Toggle navigation">
 			<span class="navbar-toggler-icon"></span>
 		</button>
-		<div class="navbar-nav">
-			<div class="nav-item text-nowrap">
-				<c:if test="${userId ne null }">
-					<a class="nav-link px-3" id="logoutBtn" href="/logout">${userId } 님</a>
+		<div class="navbar-nav drop-down">
+			<div class="nav-item text-nowrap drop-down">
+				 <c:if test="${userId ne null }">
+					<span class="nav-link px-3 dropdown-toggle" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false" >${userId } 님</span>
 				</c:if>
+				<div class="dropdown-menu" aria-labelledby="dropdownMenuButton1"> 
+				<li><a class="dropdown-item"  href="/logout">logout</a></li>
+				</div> 
 			</div>
 		</div>
 	</header>
@@ -55,8 +63,8 @@
 	<div class="container-fluid">
 	
 		<form name="pageForm" id="paging" method="GET" action="/productList">
-			<input type="hidden" name="page" id="page" value="${inData.page }" />
-			<input type="hidden" name="pageSize" value="${inData.pageSize }" />
+			<input type="hidden" name="page" id="page" value="${pageMap.currentPageNum }" />
+			<input type="hidden" name="pageSize" value="${pageMap.postsPerPage }" />
 			<input type="hidden" name="searchType" value="${inData.searchType }" />
 			<input type="hidden" name="searchWord" value="${inData.searchWord }" />
 		</form>
@@ -79,38 +87,6 @@
 						</li>
 					</ul>
 				
-	<!-- 				<h6 class="sidebar-heading d-flex justify-content-between align-items-center px-3 mt-4 mb-1 text-muted"> -->
-	<!-- 					<span>Saved reports</span> -->
-	<!-- 					<a class="link-secondary" href="#" aria-label="Add a new report"> -->
-	<!-- 						<span data-feather="plus-circle"></span> -->
-	<!-- 					</a> -->
-	<!-- 				</h6> -->
-	<!-- 				<ul class="nav flex-column mb-2"> -->
-	<!-- 					<li class="nav-item"> -->
-	<!-- 						<a class="nav-link" href="#"> -->
-	<!-- 							<span data-feather="file-text"></span> -->
-	<!-- 							Current month -->
-	<!-- 						</a> -->
-	<!-- 					</li> -->
-	<!-- 					<li class="nav-item"> -->
-	<!-- 						<a class="nav-link" href="#"> -->
-	<!-- 							<span data-feather="file-text"></span> -->
-	<!-- 							Last quarter -->
-	<!-- 						</a> -->
-	<!-- 					</li> -->
-	<!-- 					<li class="nav-item"> -->
-	<!-- 						<a class="nav-link" href="#"> -->
-	<!-- 							<span data-feather="file-text"></span> -->
-	<!-- 							Social engagement -->
-	<!-- 						</a> -->
-	<!-- 					</li> -->
-	<!-- 					<li class="nav-item"> -->
-	<!-- 						<a class="nav-link" href="#"> -->
-	<!-- 							<span data-feather="file-text"></span> -->
-	<!-- 							Year-end sale -->
-	<!-- 						</a> -->
-	<!-- 					</li> -->
-	<!-- 				</ul> -->
 				</div>
 			</nav>
 		
@@ -119,20 +95,27 @@
 					<h1 class="h2">상품목록</h1>
 				</div>
 				<div class="pt-3 pb-2 mb-3 ms-2">
-					<label for="allCheck">
-						<span>
-							총 ${totalCount}개 중 00개의 상품 표시중 /
-						</span>
-						<span id="checkCnt">0</span>
-						<span>
-							개 선택됨
-						</span>
-					</label>
+					<fmt:formatNumber value="${totalCount}" type="number" var="tCount" />	
+					<c:if test="${tCount > 10}">
+						<span id="totalCnt">총 ${tCount}개 중 10개의 상품 표시중 /</span>
+					</c:if>
+					<c:if test="${tCount < 11}">
+						<span id="totalCnt">총 ${tCount}개 중 ${tCount}개의 상품 표시중 /</span>
+					</c:if>
+					<span id="checkCnt">0</span>
+					<span>개 선택됨</span>
+				
 					<div class="btn-toolbar mb-2 mb-md-0">
 						<div class="btn-group me-2">
 							<button type="button" class="btn btn-primary" onclick="delBtn()">
 								선택한 상품 삭제
 							</button>
+						</div>
+					</div>
+					<div class="searchDiv">
+						<div>
+							<input type="text" id="searchWord" value="${inData.searchWord }" />
+							<a href="javascript:void(0);" id="search"  class="searchBtn">검색</a>
 						</div>
 					</div>
 				</div>
@@ -172,9 +155,45 @@
 						
 					</table>
 				</div>
+				<nav aria-label="Page navigation example">
+					<ul class="pagination">
+						<c:if test="${pageMap.blockFirstPageNum != null && pageMap.isPrevExist == true }">
+							<li class="page-item">
+								<a class="page-link" aria-label="Previous" onclick="pageClick(this)" data-value="${pageMap.blockFirstPageNum - pageMap.pagePerBlock } }">
+									<span aria-hidden="true">&laquo;</span>
+								</a>
+							</li>
+						</c:if>
+						<c:if test="${pageMap.totalPostCount > 0 }">
+							<c:forEach var="list" items="${pageMap.pageList }" varStatus="index">
+								<li class="page-item"><a class="page-link" onclick="pageClick(this)" data-value="${list }">${list }</a></li>
+							</c:forEach>
+						</c:if>
+						<c:if test="${pageMap.totalLastPageNum != null && pageMap.isNextExist == true }">
+							<li class="page-item">
+								<a class="page-link" aria-label="Next" onclick="pageClick(this)" data-value="${(pageMap.blockLastPageNum + 1)}">
+									<span aria-hidden="true">&raquo;</span>
+								</a>
+							</li>
+						</c:if>
+					</ul>
+				</nav>
 			</main>
 		</div>
 	</div>
+	
+	<!-- modal-logout -->
+	<div class="modal fade" id="logoutModal" tabindex="-1" aria-labelledby="urlOpenModalLabel" aria-hidden="true">
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h5 class="modal-title me-2" id="urlOpenModalLabel">로그아웃</h5>
+					<a href="/logout"><button type="button" class="btn btn-primary btn-sm">로그아웃</button></a>
+				</div>
+			</div>
+		</div>
+	</div>   
+	
 </body>
 <script>
 	var token = $("meta[name='_csrf']").attr("content");
@@ -196,9 +215,42 @@
 			
 		});
 		
+		//선택숫자 카운트
 		$('.pList').on('change', function(){
 			checkCnt();
 		});
+		
+		//로그아웃클릭시 모달
+		$('#logout').on('click', function(){
+			$('#logoutModal').modal('show');
+		});
+		
+		//페이지네이션 클릭시 목록
+// 		$('.page-link').on('click', function(){
+// 			$('#page').val($(this).data('value'));
+			
+// 			var jsonData = {
+// 		    		page: $('#page').val(),
+// 		    		searchWord: $('#searchWord').val()
+// 	    		};
+		    
+// 			$.ajax({
+// 				type: "post",
+// 				url: "/productList.do",
+// 				contentType: "application/json; charset=UTF-8",
+// 				dataType: "json",
+// 				data: JSON.stringify(jsonData),
+// 				success: function(data) {
+// 					makeHtml(data);
+// 				},
+// 				error : function(e) {
+// 			        console.log("ERROR : ", e);
+// 			        alert("서버요청실패");
+// 		        }
+			
+// 			});
+// 		});
+		
 	});
 	
 	//체크된 리스트 숫자
@@ -220,7 +272,11 @@
 	    	data.push($(this).val());
 	    });
 	    
-	    var jsonData = {pNum: data};
+	    var jsonData = {
+	    		pNum: data,
+	    		page: $('#page').val(),
+	    		searchWord: $('#searchWord').val()
+    		};
 	    
 		$.ajax({
 			type: "post",
@@ -229,8 +285,7 @@
 			dataType: "json",
 			data: JSON.stringify(jsonData),
 			success: function(data) {
-				window.location.href=window.location.href;
-// 				makeHtml();
+				makeHtml(data);
 			},
 			error : function(e) {
 		        console.log("ERROR : ", e);
@@ -240,21 +295,133 @@
 		});
 	};
 	
-	//화면구성
-// 	var makeHtml = function(){
+	//페이지네이션
+	var pageClick = function(object){
+		$('#page').val($(object).data('value'));
 		
-// 	};
-	
-	
-	function goPage(page) {
-		$("#page").val(page);
+		var jsonData = {
+	    		page: $('#page').val(),
+	    		searchWord: $('#searchWord').val()
+    		};
+	    
+		$.ajax({
+			type: "post",
+			url: "/productList.do",
+			contentType: "application/json; charset=UTF-8",
+			dataType: "json",
+			data: JSON.stringify(jsonData),
+			success: function(data) {
+				makeHtml(data);
+			},
+			error : function(e) {
+		        console.log("ERROR : ", e);
+		        alert("서버요청실패");
+	        }
 		
-// 		$("#").attr({
-// 			"method" : "GET",
-// 			"action" : ""
-// 		}).mcpSubmit();
-	};
+		});
+	}
 	
+	if("${inData.searchType }" != "") {
+		$("#bbs_select01").val("${inData.searchType }").prop("selected", true);		<%--searchType 값 세팅--%>
+		
+		var select_name = $("#bbs_select01").children("option:selected").text();	<%-- select된 텍스트 --%>
+		$("#bbs_select01").siblings("label").text(select_name);						<%-- label에 텍스트 삽입 --%>
+	}
+	if("${inData.pageSize }" != "") {
+		$("#bbs_select02").val("${inData.pageSize }").prop("selected", true);		<%--pageSize 값 세팅--%>
+		
+		var select_name = $("#bbs_select02").children("option:selected").text();	<%-- select된 텍스트 --%>
+		$("#bbs_select02").siblings("label").text(select_name);						<%-- label에 텍스트 삽입 --%>
+	}
+	
+	<%--검색 버튼 클릭 시--%>
+	$("#search").on("click", function() {
+		$("#searchWord").val($("#searchWord").val().trim());	<%--검색어 양옆 공백제거--%>
+		$("input[name='searchWord']").val($("#searchWord").val());
+// 		$("input[name='searchType']").val($("#bbs_select01").val());
+// 		$("input[name='pageSize']").val($("#bbs_select02").val());
+		$("#page").val(1);
+		
+		var jsonData = {
+				searchWord: $('#searchWord').val()
+		};
+	    
+		$.ajax({
+			type: "post",
+			url: "/productList.do",
+			contentType: "application/json; charset=UTF-8",
+			dataType: "json",
+// 			data: jsonData,
+			data: JSON.stringify(jsonData),
+			success: function(data) {
+				makeHtml(data);
+			},
+			error : function(e) {
+		        console.log("ERROR : ", e);
+		        alert("서버요청실패");
+	        }
+		
+		});
+	});
+	
+	<%--검색창에서 엔터 누를 시--%>
+	$("#searchWord").on("keydown", function() {
+		if('Enter' == event.key) {
+			$("#search").click();	<%--검색 버튼 클릭--%>
+		}
+	});
+	
+	var makeHtml = function(data){
+		var html = '';
+		var pageHtml = '';
+		
+		if(data.totalCount != null && data.totalCount != undefined && data.totalCount != '0'){
+			for(var i = 0; i < data.outList.length; i++){					
+				html += '<tr id="pList' + data.outList[i].PRODUCNUM + '" data-value="' + data.outList[i].PRODUCNUM +'">   															';
+				html += '	<td><input type="checkbox" class="pList" value="' + data.outList[i].PRODUCNUM + '" /></td>                                      ';
+				html += '	<td>' + data.outList[i].PRODCNAME + '</td>                                                                         ';
+				html += '	<td class="center">' + data.outList[i].PRODPRICE + '</td>                                                         ';
+				html += '	<td><input type="button" onclick="updateSelected(' + data.outList[i].PRODUCNUM + ')" value="수정" /></td>           ';
+				html += '	<td>' + data.outList[i].PRREGDATE + '</td>                                                                         ';
+				html += '</tr>                                                                                                      ';
+			}
+		}else if(data.totalCount == '0' || data.totalCount == null){
+			
+			html += '<tr><td colspan="6">등록된 상품이 없습니다.</td></tr>';
+		}
+		
+		if(data.totalCount != null && data.totalCount != undefined && data.totalCount != '0'){
+			if(data.pageMap.blockFirstPageNum != null && data.pageMap.blockFirstPageNum != 1 ){   
+				pageHtml += '   <li class="page-item">                                                                                                         ';
+				pageHtml += '		<a class="page-link" aria-label="Previous" onclick="pageClick(this)" data-value="'+ (data.pageMap.blockFirstPageNum - data.pageMap.pagesPerBlock) +'">  ';
+				pageHtml += '			<span aria-hidden="true">&laquo;</span>                                                                                    ';
+				pageHtml += '		</a>                                                                                                                           ';
+		 	    pageHtml += '   </li>                                                                                                                          ';
+			}                                                                                                                                                  
+			if(data.pageMap.totalPostCount > 0 ){  
+				for(var i = 0; i < data.pageMap.pageList.length; i++){	
+					pageHtml += '   <li class="page-item">                                                                                                         ';
+					pageHtml += '		<a class="page-link" onclick="pageClick(this)" data-value="'+ data.pageMap.pageList[i] +'">'+ data.pageMap.pageList[i] +'</a>                       ';
+			 	    pageHtml += '   </li>                                                                                                                          ';
+				}
+			}                                                                                                                                                  
+			if(data.pageMap.totalLastPageNum != null && data.pageMap.totalLastPageNum > data.pageMap.blockLastPageNum ){  
+				pageHtml += '   <li class="page-item">                                                                                                         ';
+				pageHtml += '		<a class="page-link" aria-label="Next" onclick="pageClick(this)" data-value="'+ (data.pageMap.blockLastPageNum + 1) +'">                               ';
+				pageHtml += '			<span aria-hidden="true">&raquo;</span>                                                                                    ';
+				pageHtml += '		</a>                                                                                                                           ';
+		 	    pageHtml += '   </li>                                                                                                                          ';
+			}                                                                                                                                                  
+		}
+		
+		$('tbody').html(html);			        //검색 정보 넣기
+		$('.pagination').html(pageHtml);        //페이지네이션 
+		if(data.totalCount > 10){
+			$('#totalCnt').text('총 '+ data.totalCount+'개 중 10개의 상품 표시중 /')
+		}else{
+			$('#totalCnt').text('총 '+ data.totalCount +'개 중 '+ data.totalCount +'개의 상품 표시중 /')
+		}
+	}
 	
 </script>
 </html>
