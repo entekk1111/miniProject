@@ -10,6 +10,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.miniProject.service.ProductService;
@@ -43,9 +44,9 @@ public class ProductController {
 	//상품 insert
 	@RequestMapping(value = "/addCheckedProduct", method = RequestMethod.POST)
 	@ResponseBody
-	public String addCheckedProduct(HttpServletRequest request) {
+	public String addCheckedProduct(HttpServletRequest request, @RequestBody List<Map<String, Object>> param) {
 		
-		productService.addCheckedProduct(request);
+		productService.addCheckedProduct(request, param);
 		
 		return "";
 	}

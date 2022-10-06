@@ -243,19 +243,51 @@ var addCheckedProduct = function(){
 		return false;
 	}
 	
-	$('.prCheck').each(function(){
-		//체크 안되어있는것 disabled 처리
-		if(!$(this).is(':checked')){
-			var index = $(this).data('index');
-			$('.product_' + index).find('input').attr('disabled', true);
-			data = $('#submitForm').serialize();
+// 	$('.prCheck').each(function(){
+// 		//체크 안되어있는것 disabled 처리
+// 		if(!$(this).is(':checked')){
+// 			var index = $(this).data('index');
+// 			$('.product_' + index).find('input').attr('disabled', true);
+// 		}
+// 	});
+// 	data = $('#submitForm').serialize();
+	
+	//1. 체크되어있는거 data-index 가져옴
+	//2. product_ + index div 하위에 있는 input 값을 가져옴 disabled 아닌 것들만
+	var dataArr = [];
+	for(var item of $('.prCheck:checked')){
+		var dataObj = {};
+		var index = $(item).data('index');
+		
+		var inputItem = $('.product_' + index).find('input:not([disabled]), textarea');
+		for(var itemInfo of inputItem){
+			if($(itemInfo).attr('name') != 'optionValue' || $(itemInfo).attr('name') != 'productPhoto'){				
+				dataObj[$(itemInfo).attr('name')] = $(itemInfo).val();
+			}
 		}
-	});
+		
+		//상품옵션
+		var optionArr = [];
+		$('.product_' + index).find('input[name="optionValue"]:not([disabled])').each(function(){
+			optionArr.push($(this).val());
+		});
+		dataObj['optionValue'] = optionArr;
+		
+		//상품사진
+		var photoArr = [];
+		$('.product_' + index).find('input[name="productPhoto"]').each(function(){
+			photoArr.push($(this).val());
+		});
+		dataObj['productPhoto'] = photoArr;
+		dataArr.push(dataObj);
+	}
+	console.log(dataArr);
 	
 	$.ajax({
 		type: "post",
 		url:"/addCheckedProduct",
-		data: data,
+		contentType: 'application/json',
+		data: JSON.stringify(dataArr),
 		success : function(data){
 			alert('업로드완료');
 		},
@@ -299,7 +331,7 @@ var getProductInfo = function(){
 				for(var i = 0; i < data.length; i++){					
 					var dataItem = data[i];
 					
-					html += '<div class="product_' + i + ' mt-4">   																																			 ';
+					html += '<div class="product_' + i + ' mt-4 product">   																																			 ';
 					html += '	<ul class="nav nav-tabs accordion">                                                                                                                                          ';
 					html += '		<li class="nav-item">                                                                                                                                                    ';
 					html += '			<input type="checkbox" class="mx-3 mt-2 form-check-input prCheck" data-index="' + i + '" onclick="checkedCount()" checked>                                                                                                   ';
@@ -310,11 +342,11 @@ var getProductInfo = function(){
 					html += '		<li class="nav-item">                                                                                                                                                    ';
 					html += '			<a class="nav-link bTab_' + i + '" href="javascript:void(0)" onclick="changeTab(\'B\', ' + i + ')">상세페이지</a>                                                                      ';
 					html += '		</li>                                                                                                                                                                    ';
-					html += '		<li class="content-end">                                                                                                                                                 ';
-					html += '			<button type="button" class="btn btn-primary" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">';
-					html += '				접기                                                                                                                                                             ';
-					html += '			</button>                                                                                                                                                            ';
-					html += '		</li>                                                                                                                                                                    ';
+// 					html += '		<li class="content-end">                                                                                                                                                 ';
+// 					html += '			<button type="button" class="btn btn-primary" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">';
+// 					html += '				접기                                                                                                                                                             ';
+// 					html += '			</button>                                                                                                                                                            ';
+// 					html += '		</li>                                                                                                                                                                    ';
 					html += '	</ul>                                                                                                                                                                        ';
 	                html += '                                                                                                                                                                                ';
 	                html += '                                                                                                                                                                                ';
@@ -329,8 +361,8 @@ var getProductInfo = function(){
 					//상품명
 					html += '						<div class="row g-3">                                                                                                                                    ';
 					html += '							<div class="col-sm-12">                                                                                                                              ';
-					html += '								<label for="firstName" class="form-label">상품명</label>                                                                                         ';
-					html += '								<input type="text" class="form-control productTitle" id="firstName" placeholder="" name="productTitle" value="' + dataItem.title + '" required="">                                                      ';
+					html += '								<label for="firstName_' + i + '" class="form-label">상품명</label>                                                                                         ';
+					html += '								<input type="text" class="form-control productTitle" id="firstName_' + i + '" placeholder="" name="productTitle" value="' + dataItem.title + '" required="">                                                      ';
 					html += '								<div class="invalid-feedback">                                                                                                                   ';
 					html += '									Valid first name is required.                                                                                                                ';
 					html += '								</div>                                                                                                                                           ';
@@ -339,8 +371,8 @@ var getProductInfo = function(){
 					
 					//가격
 					html += '							<div class="col-sm-12">                                                                                                                              ';
-					html += '								<label for="lastName" class="form-label">가격</label>                                                                                            ';
-					html += '								<input type="text" class="form-control" id="lastName" placeholder="" name="productPrice" value="' + dataItem.price + '" required="">                                                       ';
+					html += '								<label for="lastName_' + i + '" class="form-label">가격</label>                                                                                            ';
+					html += '								<input type="text" class="form-control" id="lastName_' + i + '" placeholder="" name="productPrice" value="' + dataItem.price + '" required="">                                                       ';
 					html += '								<div class="invalid-feedback">                                                                                                                   ';
 					html += '									Valid last name is required.                                                                                                                 ';
 					html += '								</div>                                                                                                                                           ';
@@ -350,8 +382,8 @@ var getProductInfo = function(){
 					//옵션
 					if(dataItem.optionKey != null && dataItem.optionKey != '' && dataItem.optionKey != undefined){						
 						html += '							<div class="col-sm-12">                                                                                                                              ';
-						html += '								<label for="lastName" class="form-label">옵션명</label>                                                                                          ';
-						html += '								<input type="text" class="form-control" id="lastName" placeholder="" name="optionKey" value="' + dataItem.optionKey + '" required="">                                                       ';
+						html += '								<label for="option_' + i + '" class="form-label">옵션명</label>                                                                                          ';
+						html += '								<input type="text" class="form-control" id="option_' + i + '" placeholder="" name="optionKey" value="' + dataItem.optionKey + '" required="">                                                       ';
 						html += '								<div class="invalid-feedback">                                                                                                                   ';
 						html += '									Valid last name is required.                                                                                                                 ';
 						html += '								</div>                                                                                                                                           ';
@@ -371,9 +403,9 @@ var getProductInfo = function(){
 						}
 						html += '							</div>                                                                                                                                               ';
 					}else{
-						html += '<div class="col-sm-12">'
-						html += '<button type="button">옵션 추가</button>'
-						html += '</div>                                                                                                                                                   ';
+// 						html += '<div class="col-sm-12">'
+// 						html += '<button type="button">옵션 추가</button>'
+// 						html += '</div>                                                                                                                                                   ';
 					}
 					html += '						</div>                                                                                                                                                   ';
 					html += '						                                                                                                                                                         ';

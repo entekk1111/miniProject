@@ -8,6 +8,7 @@ import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import javax.transaction.Transactional;
 
+import org.apache.jasper.tagplugins.jstl.core.If;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -30,48 +31,56 @@ public class ProductService {
 	}
 	
 	//DB에 insert
-	@Transactional
-	public int addCheckedProduct(HttpServletRequest request) {
-		Map<String, Object> map = new HashMap<String, Object>();
-		List<Map<String, Object>> optionList = new ArrayList<Map<String, Object>>();
+//	@Transactional
+	public int addCheckedProduct(HttpServletRequest request, List<Map<String, Object>> param) {
 		
 		SessionVO sessionVO =  (SessionVO)request.getSession().getAttribute("SID");
 		
-		//사진 최대 10장
-		String[] productPhotos = request.getParameterValues("productPhoto");
-		if(productPhotos != null && productPhotos.length > 0) {
-			for(int i = 0; i < productPhotos.length && i < 10; i++) {
-				map.put("PRPHOTO0" + (i+1), productPhotos[i]);
+		for(int i = 0; i < param.size(); i++) {
+			Map<String, Object> map = new HashMap<String, Object>();
+
+			map.put("MEMBERNUM", sessionVO.getMemberNum());						//회원번호
+			map.put("PRODCNAME", param.get(i).get("productTitle"));				//상품명
+			map.put("PRODETAIL", param.get(i).get("productDetail"));	//상품상세
+			
+			if(param.get(i).get("productPrice") != null) {		
+				String price = String.valueOf(param.get(i).get("productPrice"));
+				map.put("PRODPRICE", Integer.valueOf(price.replaceAll("[^0-9.]", "")));		//가격
 			}
+			
+			//사진 최대 10장
+			List<String> productPhotos = (List<String>) param.get(i).get("productPhoto");
+			if(productPhotos != null && productPhotos.size() > 0) {
+				for(int j = 0; j < productPhotos.size() && j < 10; j++) {
+					map.put("PRPHOTO0" + (j+1), productPhotos.get(j));
+				}
+			}
+			
+			int r = productMapper.addCheckedProduct(map);					//상품 insert
+			//1.방금등록한 상품번호 가져옴
+			int productNum = productMapper.getRecentProductNumber(sessionVO.getMemberNum());
+			
+			//상품옵션
+			List<Map<String, Object>> optionList = new ArrayList<Map<String, Object>>();
+			List<String> optionValues = (List<String>) param.get(i).get("optionValue");
+			if(optionValues != null && optionValues.size() > 0) {
+				for(int z = 0; z < optionValues.size(); z++) {				
+					Map<String, Object> optionMap = new HashMap<String, Object>();
+					optionMap.put("PRODUCNUM", productNum);							//상품번호
+					optionMap.put("OPTIONAME", param.get(i).get("optionKey"));	//상품옵션명
+					optionMap.put("OPTIVALUE", optionValues.get(z));								//상품옵션값
+					optionList.add(optionMap);
+				}
+				int e = productMapper.addOption(optionList);
+				System.out.println(e);
+			}
+			
 		}
-		
-		map.put("MEMBERNUM", sessionVO.getMemberNum());					//회원번호
-		map.put("PRODCNAME", request.getParameter("productTitle"));		//상품명
-		map.put("PRODPRICE", Integer.valueOf(request.getParameter("productPrice").replaceAll("[^0-9.]", "")));		//가격
-		map.put("PRODETAIL", request.getParameter("productDetail"));	//상품상세
 		
 //		map.put("DEIOPTION", request.getParameter("DEIOPTION"));		//배송유형
 //		map.put("DELIPRICE", request.getParameter("DELIPRICE"));		//배송비
 //		map.put("PKFOPRICE", request.getParameter("PKFOPRICE"));		//배대지비용
 //		map.put("PRODUSALE", request.getParameter("PRODUSALE"));		//판매가 할인률
-
-		int r = productMapper.addCheckedProduct(map);					//상품 insert
-		//1.방금등록한 상품번호 가져와야함
-		int productNum = productMapper.getRecentProductNumber(sessionVO.getMemberNum());
-		
-		//상품옵션
-		String[] optionValues = request.getParameterValues("optionValue");
-		if(optionValues != null && optionValues.length > 0) {
-			for(String item : optionValues) {				
-				Map<String, Object> optionMap = new HashMap<String, Object>();
-				optionMap.put("PRODUCNUM", productNum);							//상품번호
-				optionMap.put("OPTIONAME", request.getParameter("optionKey"));	//상품옵션명
-				optionMap.put("OPTIVALUE", item);								//상품옵션값
-				optionList.add(optionMap);
-			}
-			productMapper.addOption(optionList);
-		}
-
 		
 		return 0;
 	}
