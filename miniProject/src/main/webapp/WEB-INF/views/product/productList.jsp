@@ -48,16 +48,21 @@
 		<button class="navbar-toggler position-absolute d-md-none collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#sidebarMenu" aria-controls="sidebarMenu" aria-expanded="false" aria-label="Toggle navigation">
 			<span class="navbar-toggler-icon"></span>
 		</button>
-		<div class="navbar-nav drop-down">
-			<div class="nav-item text-nowrap drop-down">
-				 <c:if test="${userId ne null }">
-					<span class="nav-link px-3 dropdown-toggle" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false" >${userId } 님</span>
-				</c:if>
-				<div class="dropdown-menu" aria-labelledby="dropdownMenuButton1"> 
-				<li><a class="dropdown-item"  href="/logout">logout</a></li>
-				</div> 
+		<div class="navbar-nav">
+			<div class="nav-item text-nowrap">
+				<a class="nav-link px-3" href="/logout">Sign out</a>
 			</div>
 		</div>
+<!-- 		<div class="navbar-nav drop-down"> -->
+<!-- 			<div class="nav-item text-nowrap drop-down"> -->
+<%-- 				 <c:if test="${userId ne null }"> --%>
+<%-- 					<span class="nav-link px-3 dropdown-toggle" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false" >${userId } 님</span> --%>
+<%-- 				</c:if> --%>
+<!-- 				<div class="dropdown-menu" aria-labelledby="dropdownMenuButton1">  -->
+<!-- 				<li><a class="dropdown-item"  href="/logout">logout</a></li> -->
+<!-- 				</div>  -->
+<!-- 			</div> -->
+<!-- 		</div> -->
 	</header>
 
 	<div class="container-fluid">
