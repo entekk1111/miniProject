@@ -42,11 +42,15 @@ public class ProductListController {
 		//페이지 사이즈 빈값일때 10으로 세팅
 		if("".equals(StringUtil.nvl(inMap.get("pageSize")))) {
 			inMap.put("pageSize", 10);
+		}else {
+			inMap.put("pageSize", Integer.parseInt(String.valueOf(inMap.get("pageSize"))));			
 		}
 		
 		//페이지 빈값일때 1로 세팅
 		if("".equals(StringUtil.nvl(inMap.get("page")))) {
 			inMap.put("page", 1);
+		}else {
+			inMap.put("page", Integer.parseInt(String.valueOf(inMap.get("page"))));
 		}
 	    
 		SessionVO sessionVO =  (SessionVO)request.getSession().getAttribute("SID");    //사용자vo

@@ -255,7 +255,7 @@
 	
 	//상품수정
 	var updateSelected = function(number){
-		location.href = '/updateProduct?number=' + number;
+		location.href = '/updateProduct?number=' + number + '&' + $('#paging').serialize();
 	};
 	
 	//체크된 리스트 숫자
