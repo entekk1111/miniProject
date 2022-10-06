@@ -21,10 +21,12 @@ public class ProductController {
 	@Autowired
 	private ProductService productService;
 	
-	@RequestMapping(value = "/product2", method = RequestMethod.GET)
-	public String getProductInfo2() {
+	//상품수정폼
+	@RequestMapping(value = "/updateProduct", method = RequestMethod.GET)
+	public String getProductInfo2(@RequestParam(value = "number")String param) {
+		System.out.println(param);
 		
-		return "/product/productForm2";
+		return "/product/updateProduct";
 	}
 
 	@RequestMapping(value = "/product", method = RequestMethod.GET)

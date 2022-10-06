@@ -253,6 +253,11 @@
 		
 	});
 	
+	//상품수정
+	var updateSelected = function(number){
+		location.href = '/updateProduct?number=' + number;
+	};
+	
 	//체크된 리스트 숫자
 	var checkCnt = function(){
 		var checkedCnt = $('.pList:checked').length;
