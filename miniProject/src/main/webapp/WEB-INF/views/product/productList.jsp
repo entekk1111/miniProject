@@ -215,11 +215,15 @@
 				$('.pList').prop('checked', false);
 			}
 			checkCnt();
-			
 		});
 		
-		//선택숫자 카운트
-		$('.pList').on('change', function(){
+		//체크버튼 클릭시 체크숫자카운트
+		$(document).on("click", ".pList", function(e) {
+			checkCnt();
+		});
+		
+		//체크버튼 변경시 체크숫자카운트
+		$(document).on("change", ".pList", function(e) {
 			checkCnt();
 		});
 		
@@ -228,53 +232,34 @@
 			$('#logoutModal').modal('show');
 		});
 		
-		//페이지네이션 클릭시 목록
-// 		$('.page-link').on('click', function(){
-// 			$('#page').val($(this).data('value'));
-			
-// 			var jsonData = {
-// 		    		page: $('#page').val(),
-// 		    		searchWord: $('#searchWord').val()
-// 	    		};
-		    
-// 			$.ajax({
-// 				type: "post",
-// 				url: "/productList.do",
-// 				contentType: "application/json; charset=UTF-8",
-// 				dataType: "json",
-// 				data: JSON.stringify(jsonData),
-// 				success: function(data) {
-// 					makeHtml(data);
-// 				},
-// 				error : function(e) {
-// 			        console.log("ERROR : ", e);
-// 			        alert("서버요청실패");
-// 		        }
-			
-// 			});
-// 		});
-		
 	});
 	
-	//상품수정
+		//상품수정
 	var updateSelected = function(number){
 		location.href = '/updateProduct?number=' + number + '&' + $('#paging').serialize();
 	};
 	
 	//체크된 리스트 숫자
 	var checkCnt = function(){
-		var checkedCnt = $('.pList:checked').length;
+		
+		var checkedCnt = $('.pList:checked').length;   //현페이지 게시글수
+		var listCnt = $('.pList').length;
 		if(checkedCnt == 0){
 			$('#checkCnt').text('0');
+			$('#checkAll').prop('checked', false);
+		}else if(checkedCnt > 0 && listCnt == checkedCnt){
+			$('#checkCnt').text(checkedCnt);
+			$('#checkAll').prop('checked', true);
 		}else{
 			$('#checkCnt').text(checkedCnt);
+			$('#checkAll').prop('checked', false);
 		}
 	};
 	
 	//삭제
 	var delBtn = function(){
 		
-	    var data = []; // key 값을 담을 배열
+	    var data = []; // 복수 선택용 배열
           
 	    $('.pList:checked').each(function(){
 	    	data.push($(this).val());
@@ -305,28 +290,32 @@
 	
 	//페이지네이션
 	var pageClick = function(object){
-		$('#page').val($(object).data('value'));
+		if($('#page').val() == $(object).data('value')){            //클릭한페이지가 현재페이지와 같은지
+			return;
+		}else if($('#page').val() != $(object).data('value')){	    //페이지가 다르면 ajax 진행
+			$('#page').val($(object).data('value'));
+			var jsonData = {
+		    		page: $('#page').val(),
+		    		searchWord: $('#searchWord').val()
+	    		};
+		    
+			$.ajax({
+				type: "post",
+				url: "/productList.do",
+				contentType: "application/json; charset=UTF-8",
+				dataType: "json",
+				data: JSON.stringify(jsonData),
+				success: function(data) {
+					makeHtml(data);
+				},
+				error : function(e) {
+			        console.log("ERROR : ", e);
+			        alert("서버요청실패");
+		        }
+			
+			});
 		
-		var jsonData = {
-	    		page: $('#page').val(),
-	    		searchWord: $('#searchWord').val()
-    		};
-	    
-		$.ajax({
-			type: "post",
-			url: "/productList.do",
-			contentType: "application/json; charset=UTF-8",
-			dataType: "json",
-			data: JSON.stringify(jsonData),
-			success: function(data) {
-				makeHtml(data);
-			},
-			error : function(e) {
-		        console.log("ERROR : ", e);
-		        alert("서버요청실패");
-	        }
-		
-		});
+		}
 	}
 	
 	if("${inData.searchType }" != "") {
@@ -346,8 +335,6 @@
 	$("#search").on("click", function() {
 		$("#searchWord").val($("#searchWord").val().trim());	<%--검색어 양옆 공백제거--%>
 		$("input[name='searchWord']").val($("#searchWord").val());
-// 		$("input[name='searchType']").val($("#bbs_select01").val());
-// 		$("input[name='pageSize']").val($("#bbs_select02").val());
 		$("#page").val(1);
 		
 		var jsonData = {
@@ -375,10 +362,11 @@
 	<%--검색창에서 엔터 누를 시--%>
 	$("#searchWord").on("keydown", function() {
 		if('Enter' == event.key) {
-			$("#search").click();	<%--검색 버튼 클릭--%>
+			$("#search").click();	// 검색버튼클릭
 		}
 	});
 	
+	// 통신후 화면그리기
 	var makeHtml = function(data){
 		var html = '';
 		var pageHtml = '';
@@ -401,7 +389,7 @@
 		if(data.totalCount != null && data.totalCount != undefined && data.totalCount != '0'){
 			if(data.pageMap.blockFirstPageNum != null && data.pageMap.blockFirstPageNum != 1 ){   
 				pageHtml += '   <li class="page-item">                                                                                                         ';
-				pageHtml += '		<a class="page-link" aria-label="Previous" onclick="pageClick(this)" data-value="'+ (data.pageMap.blockFirstPageNum - data.pageMap.pagesPerBlock) +'">  ';
+				pageHtml += '		<a class="page-link" aria-label="Previous" onclick="pageClick(this)" data-value="'+ (data.pageMap.blockFirstPageNum - 1) +'">  ';
 				pageHtml += '			<span aria-hidden="true">&laquo;</span>                                                                                    ';
 				pageHtml += '		</a>                                                                                                                           ';
 		 	    pageHtml += '   </li>                                                                                                                          ';
@@ -424,11 +412,8 @@
 		
 		$('tbody').html(html);			        //검색 정보 넣기
 		$('.pagination').html(pageHtml);        //페이지네이션 
-		if(data.totalCount > 10){
-			$('#totalCnt').text('총 '+ data.totalCount+'개 중 10개의 상품 표시중 /')
-		}else{
-			$('#totalCnt').text('총 '+ data.totalCount +'개 중 '+ data.totalCount +'개의 상품 표시중 /')
-		}
+		$('#totalCnt').text('총 '+ data.totalCount +'개 중 '+ data.outList.length +'개의 상품 표시중 /')
+		checkCnt();
 	}
 	
 </script>
