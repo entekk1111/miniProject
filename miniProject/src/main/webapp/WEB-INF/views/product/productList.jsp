@@ -111,13 +111,11 @@
 					<span id="checkCnt">0</span>
 					<span>개 선택됨</span>
 				
-					
 						<div class="btn-group me-2">
 							<button type="button" class="btn btn-primary" onclick="delBtn()">
 								선택한 상품 삭제
 							</button>
 						</div>
-					
 				</div>
 			
 				<div class="table-responsive">
@@ -235,7 +233,6 @@
 	var updateSelected = function(number){
 		location.href = '/updateProduct?number=' + number + '&' + $('#paging').serialize();
 	};
-	
 	
 	//체크된 리스트 숫자
 	var checkCnt = function(){
