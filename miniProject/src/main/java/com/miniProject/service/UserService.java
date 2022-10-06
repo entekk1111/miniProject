@@ -1,6 +1,5 @@
 package com.miniProject.service;
 
-import java.util.HashMap;
 import java.util.Map;
 
 import javax.transaction.Transactional;
@@ -8,8 +7,6 @@ import javax.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import org.springframework.validation.Errors;
-import org.springframework.validation.FieldError;
 
 import com.miniProject.mapper.UserMapper;
 
@@ -44,5 +41,27 @@ public class UserService {
 //    		}        
 //    	return validatorResult;
 //    }
+    
+    /**
+     * 가입여부확인
+     * @param paramMap
+     * @return
+     */
+    public int checkId(Map<String, Object> paramMap) {
+    	Map<String, Object> map = paramMap;
+    	int result = userMapper.checkId(map);                								    
+        return result;
+    }
+    
+    /**
+     * 이메일등록확인
+     * @param paramMap
+     * @return
+     */
+    public int checkEmail(Map<String, Object> paramMap) {
+    	Map<String, Object> map = paramMap;
+    	int result = userMapper.checkEmail(map);                								    
+    	return result;
+    }
     	
 }

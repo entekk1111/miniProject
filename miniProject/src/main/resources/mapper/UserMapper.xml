@@ -39,6 +39,7 @@
 		WHERE MEMUSERID = #{username} AND AVAILABLE = 'Y'
 	</select>
 	
+	
 	<select id="getUserInfo" resultType="com.miniProject.model.SessionVO">
 	
 		SELECT MEMUSERID AS id
@@ -50,4 +51,17 @@
 		WHERE MEMUSERID = #{username} AND AVAILABLE = 'Y'
 	</select>
 	
+	<!-- 가입 아이디 확인 -->
+	<select id="checkId" resultType="int">
+		SELECT COUNT(*)
+		FROM MEMBER
+		WHERE MEMUSERID = #{userId} AND AVAILABLE = 'Y'
+	</select>
+	
+	<!-- 가입 이메일 확인 -->
+	<select id="checkEmail" resultType="int">
+		SELECT COUNT(*)
+		FROM MEMBER
+		WHERE MEMBERMAIL = #{email} AND AVAILABLE = 'Y'
+	</select>
 </mapper>

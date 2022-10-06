@@ -11,6 +11,12 @@ import com.miniProject.model.SessionVO;
 public interface UserMapper {
 	
     int userSave(Map<String, Object> inMap);
+    
     CustomUserDetails getUserAccount(String username);
+    
     SessionVO getUserInfo(String username);
+    
+    int checkId(Map<String, Object> inMap);
+    
+    int checkEmail(Map<String, Object> inMap);
 }

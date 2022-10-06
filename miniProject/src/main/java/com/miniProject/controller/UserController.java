@@ -5,7 +5,6 @@ import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
@@ -13,14 +12,12 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.validation.Errors;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import com.miniProject.model.SessionVO;
 import com.miniProject.service.UserService;
 
 @Controller
@@ -57,9 +54,9 @@ public class UserController {
     }
 	
     //회원가입
-	@RequestMapping(value="/register.do", method = RequestMethod.POST, produces = "application/text; charset=UTF-8")
+	@RequestMapping(value="/register.do", method = RequestMethod.POST, produces = "application/json; charset=UTF-8")
 	@ResponseBody
-	public int singUp(@RequestBody Map<String, Object> paramMap) throws Exception {
+	public int signUp(@RequestBody Map<String, Object> paramMap) throws Exception {
 		//회원가입 실패시 입력값 유지
 //		if (errors.hasErrors()) {
 ////			model.addAttribute("sessionVO", sessionVO);
@@ -73,6 +70,37 @@ public class UserController {
 //		}
 		int result = userService.joinUser(paramMap);
 		return result;
+	}
+	
+	//아이디 체크
+	@RequestMapping(value="/check.id", method = RequestMethod.POST, produces = "application/json; charset=UTF-8")
+	@ResponseBody
+	public int checkId(@RequestBody Map<String, Object> paramMap) throws Exception {
+		
+		int result = userService.checkId(paramMap);
+		return result;
+	}
+	
+	//이메일 체크
+	@RequestMapping(value="/check.email", method = RequestMethod.POST, produces = "application/json; charset=UTF-8")
+	@ResponseBody
+	public int checkEmail(@RequestBody Map<String, Object> paramMap) throws Exception {
+		
+		int result = userService.checkEmail(paramMap);
+		return result;
+	}
+	
+	//이메일 아이디 체크
+	@RequestMapping(value="/check.emailId", method = RequestMethod.POST, produces = "application/json; charset=UTF-8")
+	@ResponseBody
+	public Map<String, Object> checkEmailId(Model model, @RequestBody Map<String, Object> paramMap) throws Exception {
+		int result1 = userService.checkId(paramMap);
+		int result2 = userService.checkEmail(paramMap);
+		Map<String, Object> outMap = new HashMap<>();
+		outMap.put("result1", result1);
+		outMap.put("result2", result2);
+		
+		return outMap;
 	}
 	
 	
