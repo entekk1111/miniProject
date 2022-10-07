@@ -1,5 +1,7 @@
 package com.miniProject.common.util;
 
+import java.text.DecimalFormat;
+
 public class StringUtil {
 	
 	/**
@@ -29,6 +31,19 @@ public class StringUtil {
 		if (str == null || str.length() == 1)
 			return "";
 		return str;
+	}
+	
+	/**
+	 * 콤마를 찍는다.
+	 * **/
+	public static String changePrice(Object obj) {
+		String returnValue = "";
+		if(obj != null) {
+			DecimalFormat decFormat = new DecimalFormat("###,###");
+
+			returnValue = decFormat.format(obj);
+		}
+		return returnValue;
 	}
 
 }

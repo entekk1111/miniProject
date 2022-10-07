@@ -12,6 +12,7 @@ import org.apache.jasper.tagplugins.jstl.core.If;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.miniProject.common.util.StringUtil;
 import com.miniProject.component.JsoupComponentLocalMain;
 import com.miniProject.mapper.ProductMapper;
 import com.miniProject.model.SessionVO;
@@ -25,7 +26,11 @@ public class ProductService {
 	
 	//상품수정 화면
 	public Map<String, Object> getProduct(String param){
-		return productMapper.getProduct(param);
+		Map<String, Object> data = productMapper.getProduct(param);
+		if(data.get("PRODPRICE") != null) {
+			data.put("PRODPRICE", StringUtil.changePrice(data.get("PRODPRICE")));
+		};
+		return data;
 	};
 	
 	//상품수정 등록

@@ -165,23 +165,25 @@
 														</div>                                                                                                                                               
 					    							</c:if>                                                                                                                            
 												</div>                                                                                                                                                   
-												                                                                                                                                                         
-												<hr class="my-4">                                                                                                                                        
-						
-												<h4 class="mb-3">사진(최대 10개)</h4>                                                                                                                               
-												<div class="row row-cols-1 row-cols-md-3 g-4">                                                                                                           
-													<c:forEach items="${item.PHOTHO }" var="a" varStatus="status">
-													<div class="col photo_${status.index }">                                                                                                                          
-														<div class="card text-end">                                                                                                                      
-															<div class="card-body">                                                                                                                      
-																<button type="button" class="btn btn-secondary" onclick="delPhoto(${status.index })"><i class="fa-solid fa-x"></i></button>                           
-																<img src="${a }" class="card-img-top">						
-																<input type="hidden" name="productPhoto" value="${a }">                                                                                                                                       
-															</div>                                                                                                                                       
-														</div>                                                                                                                                           
-													</div>                                                                                                                                               
-													</c:forEach>
-												</div>                                                                                                                                                   
+												
+												<c:if test="${not empty item.PHOTHO }">
+													<hr class="my-4">                                                                                                                                        
+							
+													<h4 class="mb-3">사진(최대 10개)</h4>                                                                                                                               
+													<div class="row row-cols-1 row-cols-md-3 g-4">                                                                                                           
+														<c:forEach items="${item.PHOTHO }" var="a" varStatus="status">
+														<div class="col photo_${status.index }">                                                                                                                          
+															<div class="card text-end">                                                                                                                      
+																<div class="card-body">                                                                                                                      
+																	<button type="button" class="btn btn-secondary" onclick="delPhoto(${status.index })"><i class="fa-solid fa-x"></i></button>                           
+																	<img src="${a }" class="card-img-top">						
+																	<input type="hidden" name="productPhoto" value="${a }">                                                                                                                                       
+																</div>                                                                                                                                       
+															</div>                                                                                                                                           
+														</div>                                                                                                                                               
+														</c:forEach>
+													</div>                                                                                                                                                   
+												</c:if>									                                                                                                                                                         
 											</div>                                                                                                                                                       
 											                                                                                                                                                             
 						

@@ -12,7 +12,7 @@ import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
-import com.miniProjcet.common.util.MiniProjectUtil;
+import com.miniProject.common.util.StringUtil;
 
 public class JsoupComponentLocalMain {
 	
@@ -71,7 +71,7 @@ public class JsoupComponentLocalMain {
 			Double priceChange = null;
 			if(!price.equals("")) {				
 				priceChange = Double.valueOf(price.replaceAll("[^0-9.]", "").replaceAll(" ", "")); 	//소수점 제외 문자열 공백처리, 공백제거
-				price = MiniProjectUtil.changePrice(priceChange * 1425.08);									//달러 환율만 넣었는데 환율 API 가져다 써야함			
+				price = StringUtil.changePrice(priceChange * 1425.08);									//달러 환율만 넣었는데 환율 API 가져다 써야함			
 			}
 			
 			List<String> photos = new ArrayList<String>();						//상품 이미지
