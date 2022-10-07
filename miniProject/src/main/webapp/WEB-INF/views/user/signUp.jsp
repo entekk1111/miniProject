@@ -418,7 +418,7 @@
 	
 	//아이디 유효성 검사 함수
 	var checkUserId = function(userId){
-	 if(!/^(?=.*[a-zA-Z])(?=.*[0-9]).{6,12}$/.test(userId)){   
+	 if(!/^(?=.*[a-zA-Z])(?=.*[0-9]).{4,20}$/.test(userId)){   
 	        return false;
 	    }else if(/[`~!@#$%^&*()_|+\-=?;:'",.<>\{\}\[\]\\\/ ]/.test(userId)){
 	        return false;

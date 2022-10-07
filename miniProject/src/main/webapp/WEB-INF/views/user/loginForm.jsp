@@ -83,31 +83,75 @@
  <body class="text-center">
    
 	<main class="form-signin w-100 m-auto">
-		<form action="/loginProc" method="post">
-			<img class="mb-4" src="/docs/5.2/assets/brand/bootstrap-logo.svg" alt="" width="72" height="57">
-			<h1 class="h3 mb-3 fw-normal">Login</h1>
-			
+		<form id="loginForm" action="/loginProc" method="post">
+<!-- 			<img class="mb-4" src="/docs/5.2/assets/brand/bootstrap-logo.svg" alt="" width="72" height="57"> -->
+			<h1 class="h2 mb-3 fw-normal">Login</h1>
+			<br>
 			<div class="form-floating">
-				<input type="text" class="form-control" id="floatingInput" name="username" placeholder="name@example.com">
+				<input type="text" class="form-control" id="username" name="username" maxlength="20" placeholder="name@example.com">
 				<label for="floatingInput">사용자ID</label>
+				<div id="username_feed" class="invalid-tooltip">
+					아이디를 입력해 주세요.
+				</div>
 			</div>
 			<div class="form-floating">
-				<input type="password" class="form-control" id="floatingPassword" name="password" placeholder="Password">
+				<input type="password" class="form-control" id="password" name="password" maxlength="20" placeholder="Password">
 				<label for="floatingPassword">비밀번호</label>
+				<div id="password_feed" class="invalid-tooltip">
+					비밀번호를 입력해 주세요.
+				</div>
 			</div>
-			
 			<div class="checkbox mb-3">
 				<label>
-					 <p ><a class="float-right"  href="/signUp">회원가입</a></p>
+					 <p><a class="float-right"  href="/signUp">회원가입</a></p>
 				</label>
 			</div>
-			<button class="w-100 btn btn-lg btn-primary" type="submit">로그인</button>
+			<button class="w-100 btn btn-lg btn-primary" id="loginBtn" type="button">로그인</button>
 	<!-- 			<p class="mt-5 mb-3 text-muted">&copy; 2017–2022</p> -->
 		</form>
 	</main>
-
-
-   
 </body>
+<script>
+$(function() {
+	$('#loginBtn').on('click', function(){
+		valueChk();
+	});
+	
+	$('#username').on('blur', function(){
+		if($('#username').val() == ''){
+			$('#username').addClass('is-invalid');
+		}else if($('#username').val() != ''){
+			$('#username').removeClass('is-invalid');
+		}
+	});
+	
+	$('#password').on('blur', function(){
+		if($('#password').val() == ''){
+			$('#password').addClass('is-invalid');
+		}else if($('#password').val() != ''){
+			$('#password').removeClass('is-invalid');
+		}
+	});
+});
+
+
+//빈값 체크
+var valueChk = function(){  
+	var id = $('#username').val();
+	var pw = $('#password').val();
+	
+	if($.trim(id) == ''){
+	    $('#username').val('');
+	    $('#username').addClass('is-invalid');
+	}
+	if($.trim(pw) == ''){
+	    $('#password').val('');
+	    $('#password').addClass('is-invalid');
+	}
+	if($.trim(id) != '' && $.trim(pw) != ''){
+		$('#loginForm').submit();
+	}
+}
+</script>
 
 </html>
