@@ -212,6 +212,8 @@
 		
 		//회원가입버튼클릭시
 		$('#register').on("click", function(){
+			var ajax1, ajax2, ajax3;
+			
 	        var validFlag = true;
 
 	        if(!validCheck()){
@@ -235,6 +237,32 @@
 		            $('#userId_feed').text('유효한 아이디를 입력해 주세요.');
                 	$('#userId').removeClass('is-valid');	
     	            $('#userId').addClass('is-invalid');
+		        }else{
+		        	ajax1 = $.ajax({             
+				                type: "POST",          
+				                url: "/check.id",
+				                data : JSON.stringify({userId : $('#userId').val()}),
+				                contentType: "application/json; charset=UTF-8",
+				                dataType : "json",
+				                async: false,
+				                success : function(data) {
+				                   if(data){
+				    					$('#userId_feed').text('이미 사용중인 아이디 입니다.');
+				    					$('#userId').removeClass('is-valid');	
+				    					$('#userId').addClass('is-invalid');
+				    					return true;
+				                   }else{
+				    					$('#userId_feed').text('');
+				    					$('#userId').removeClass('is-invalid');	
+				    					$('#userId').addClass('is-valid');
+				    					return false;
+				                   }
+				                },
+				                error : function(e) {
+				                   console.log("ERROR : ", e);
+				                   alert("서버요청실패");
+				                }
+				           });
 		        }
 	        }else{
 	        	validFlag = false;
@@ -242,6 +270,32 @@
 	        if(!$('#userEmail').hasClass('is-invalid')){
 		        if(!emailChk($('#userEmail').val())){
 		            validFlag = false;
+		        }else{
+		        	ajax2 = $.ajax({          
+				    	        type: "POST",          
+				    	        url: "/check.email",
+				    	        data : JSON.stringify({email : $('#userEmail').val()}),
+				    	        contentType: "application/json; charset=UTF-8",
+				    	        dataType : "json",
+				    	        async: false,
+				    	        success : function(data) {
+				    				if(data){
+				    					$('#userEmail_feed').text('이미 사용중인 이메일입니다..');
+				    					$('#userEmail').addClass('is-invalid');
+				    					$('#userEmail').removeClass('is-valid');
+				    					return true;
+				    				}else{
+				    				  	$('#userEmail_feed').text('');
+				    				  	$('#userEmail').addClass('is-valid');
+				    				  	$('#userEmail').removeClass('is-invalid');
+				    				  	return false;
+				    				}
+				    	        },
+				    	        error : function(e) {
+				    	           console.log("ERROR : ", e);
+				    	           alert("서버요청실패");
+				    	        }
+				    	    }); 
 		        }
 	        }else{
 	        	validFlag = false;
@@ -251,33 +305,33 @@
 	            validFlag = false;
 	        }
 	        
-	        if(validFlag){
-	        	emailIdChk();
-	        }
-	        	
-	        	
-// 	        	var formData = {
-//      				userId : $('#userId').val(),
-//      				userEmail : $('#userEmail').val(),
-//      				userPw : $('#userPw').val(),
-//      				gender : $("input:radio[name='gender']:checked").val(),
-//      				age: $("input[name='age']").val()
-//      			}
-    			
-//      			$.ajax({
-//      				type: "post",
-//      				url: "/register.do",
-//      				contentType: "application/json; charset=UTF-8",
-//      				data: JSON.stringify(formData),
-//      				success: function(data) {
-//      					alert("회원가입 완료");
-//      					location.href="/login";
-//      				},
-//      				error : function(e) {
-//      			        console.log("ERROR : ", e);
-//      			        alert("서버요청실패");
-//      		        }
-//      			});
+	        $.when(ajax1, ajax2).done(function(){
+	        	if(validFlag){
+	        		var formData = {
+           				userId : $('#userId').val(),
+           				userEmail : $('#userEmail').val(),
+           				userPw : $('#userPw').val(),
+           				gender : $("input:radio[name='gender']:checked").val(),
+           				age: $("input[name='age']").val()
+           			}
+          			
+           			$.ajax({
+           				type: "post",
+           				url: "/register.do",
+           				contentType: "application/json; charset=UTF-8",
+           				async: false,
+           				data: JSON.stringify(formData),
+           				success: function(data) {
+           					alert("회원가입 완료");
+           					location.href="/login";
+           				},
+           				error : function(e) {
+           			        console.log("ERROR : ", e);
+           			        alert("서버요청실패");
+           		        }
+           			});
+	        	}
+	        });
 	    });
 		
 	});
