@@ -177,34 +177,6 @@
 			$(this).val( $(this).val().replace(/[^0-9]/gi,"") );
 		});
 		
-		//가입버튼
-// 		$("#register").on("click", function() {
-			
-// 			var formData = {
-// 				userId : $('#userId').val(),
-// 				userEmail : $('#userEmail').val(),
-// 				userPw : $('#userPw').val(),
-// 				gender : $("input:radio[name='gender']:checked").val(),
-// 				age: $("input[name='age']").val()
-// 			}
-			
-// 			$.ajax({
-// 				type: "post",
-// 				url: "/register.do",
-// 				contentType: "application/json; charset=UTF-8",
-// 				data: JSON.stringify(formData),
-// 				success: function(data) {
-// 					alert("회원가입 완료");
-// 					location.href="/login";
-// 				},
-// 				error : function(e) {
-// 			        console.log("ERROR : ", e);
-// 			        alert("서버요청실패");
-// 		        }
-			
-// 			});
-// 		});
-		
 		//각항목 valid 체크
 		$('.check').on('blur', function(){
 			validationCheck(this);
@@ -212,16 +184,16 @@
 		
 		//회원가입버튼클릭시
 		$('#register').on("click", function(){
-			var ajax1, ajax2, ajax3;
+			var ajax1, ajax2;  										// ajax 순차실행용 변수; 
 			
-	        var validFlag = true;
+	        var validFlag = true;									// 통과 플래그
 
-	        if(!validCheck()){
+	        if(!validCheck()){										// 빈값 확인
 	            validFlag = false;
 	        }
 	        
-	        if(!$('#userPw').hasClass('is-invalid')){
-		        if(!checkPassword($('#userPw').val())){
+	        if(!$('#userPw').hasClass('is-invalid')){		 
+		        if(!checkPassword($('#userPw').val())){				// 비밀번호 유효성
 		            validFlag = false;
 		        }else if($('#userPw').val() != $('#pwChk').val()){
 		        	$('#pwChk_feed').text('비밀번호가 일치하지 않습니다.');
@@ -232,13 +204,13 @@
 	        	validFlag = false;
 	        }	
 	        if(!$('#userId').hasClass('is-invalid')){
-		        if(!checkUserId($('#userId').val())){
+		        if(!checkUserId($('#userId').val())){	 			// 아이디 유효성
 		            validFlag = false;
 		            $('#userId_feed').text('유효한 아이디를 입력해 주세요.');
                 	$('#userId').removeClass('is-valid');	
     	            $('#userId').addClass('is-invalid');
 		        }else{
-		        	ajax1 = $.ajax({             
+		        	ajax1 = $.ajax({                       			// 아이디 db 조회
 				                type: "POST",          
 				                url: "/check.id",
 				                data : JSON.stringify({userId : $('#userId').val()}),
@@ -268,10 +240,10 @@
 	        	validFlag = false;
 	        }
 	        if(!$('#userEmail').hasClass('is-invalid')){
-		        if(!emailChk($('#userEmail').val())){
+		        if(!emailChk($('#userEmail').val())){          		   // 이메일 유효성
 		            validFlag = false;
 		        }else{
-		        	ajax2 = $.ajax({          
+		        	ajax2 = $.ajax({                            	   // 이메일 db 조회
 				    	        type: "POST",          
 				    	        url: "/check.email",
 				    	        data : JSON.stringify({email : $('#userEmail').val()}),
@@ -301,11 +273,11 @@
 	        	validFlag = false;
 	        }
 	        
-	        if($('.check').hasClass('is-invalid')){
+	        if($('.check').hasClass('is-invalid')){        
 	            validFlag = false;
 	        }
 	        
-	        $.when(ajax1, ajax2).done(function(){
+	        $.when(ajax1, ajax2).done(function(){                 	    // db조회 2건 모두 완료시 회원가입 ajax 실행
 	        	if(validFlag){
 	        		var formData = {
            				userId : $('#userId').val(),
