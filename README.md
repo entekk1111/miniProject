@@ -1,5 +1,4 @@
 # miniProject
-miniProject
 ![슬라이드0001](https://user-images.githubusercontent.com/83526150/195473789-0497323e-7426-498d-ab7f-824441e51d75.jpg)
 ![슬라이드0002](https://user-images.githubusercontent.com/83526150/195473790-6f375d76-65d3-4b47-8a59-8efc94ea6b39.jpg)
 ![슬라이드0003](https://user-images.githubusercontent.com/83526150/195473792-ebd6891e-95c3-41f7-9f93-a075730dc2b1.jpg)
@@ -32,4 +31,3 @@ miniProject
 ![슬라이드0030](https://user-images.githubusercontent.com/83526150/195473783-ababc7dd-c9c9-4e4e-a811-f44138afc674.jpg)
 ![슬라이드0031](https://user-images.githubusercontent.com/83526150/195473785-b9e04dc9-2c60-4747-b8a6-da90afc8d496.jpg)
 ![슬라이드0032](https://user-images.githubusercontent.com/83526150/195473786-18d099a9-81b3-4561-a877-5104e8d3e97e.jpg)
-![슬라이드0033](https://user-images.githubusercontent.com/83526150/195473787-80a66957-d0c6-4a49-856f-782c9ebac1c5.jpg)
