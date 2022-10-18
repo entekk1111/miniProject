@@ -1,4 +1,8 @@
 # miniProject
+### **프로젝트명 : 상품긁어**
+
+- 이베이 사이트에서 상품 url로 상품 정보를 크롤링하여 가져온다. 
+
 ![슬라이드0001](https://user-images.githubusercontent.com/83526150/195473789-0497323e-7426-498d-ab7f-824441e51d75.jpg)
 ![슬라이드0002](https://user-images.githubusercontent.com/83526150/195473790-6f375d76-65d3-4b47-8a59-8efc94ea6b39.jpg)
 ![슬라이드0003](https://user-images.githubusercontent.com/83526150/195473792-ebd6891e-95c3-41f7-9f93-a075730dc2b1.jpg)
